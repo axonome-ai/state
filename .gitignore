@@ -11,3 +11,9 @@ src/state/configs/wandb/*
 tmp/
 notebooks/
 *.sif
+
+.idea/
+
+competition/
+
+wandb/

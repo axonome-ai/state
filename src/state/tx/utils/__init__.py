@@ -106,7 +106,7 @@ def get_loggers(
                 project=wandb_project,
                 entity=wandb_entity,
                 dir=local_wandb_dir,
-                tags=cfg["wandb"].get("tags", []) if cfg else [],
+                tags=list(set((cfg["wandb"].get("tags", []) if cfg else [])+[name])),
             )
             if cfg is not None:
                 wandb_logger.experiment.config.update(cfg)
@@ -139,7 +139,7 @@ def get_checkpoint_callbacks(output_dir: str, name: str, val_freq: int, ckpt_eve
     # Save best checkpoint based on validation loss
     best_ckpt = ModelCheckpoint(
         dirpath=checkpoint_dir,
-        filename="step={step}-val_loss={val_loss:.4f}",
+        filename="{step}-val_loss={val_loss:.4f}",
         save_last="link",  # Will create last.ckpt symlink to best checkpoint
         monitor="val_loss",
         mode="min",

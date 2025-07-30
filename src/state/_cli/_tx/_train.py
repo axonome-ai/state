@@ -349,6 +349,7 @@ def run_tx_train(cfg: DictConfig):
         print("trainer.fit() completed")
 
     print("Training completed, saving final checkpoint...")
+    print(f"Use this model_dir\n{Path(cfg['output_dir']).resolve()/ cfg['name']}")
 
     # at this point if checkpoint_path does not exist, manually create one
     checkpoint_path = join(ckpt_callbacks[0].dirpath, "final.ckpt")

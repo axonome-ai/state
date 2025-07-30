@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 
 def add_arguments_infer(parser: argparse.ArgumentParser):
@@ -59,11 +60,20 @@ def run_tx_infer(args):
     logger.info(f"Loaded config from {config_path}")
 
     # Determine checkpoint path
+    checkpoint_dir = Path(args.model_dir).resolve() / 'checkpoints'
+    final_checkpoint_path = checkpoint_dir / 'final.ckpt'
     if args.checkpoint is not None:
-        checkpoint_path = args.checkpoint
+        if args.checkpoint == 'best':
+            checkpoint_path = str(next((p for p in Path(checkpoint_dir).iterdir() if 'val_loss' in p.stem)))
+        elif args.checkpoint == 'final':
+            checkpoint_path = final_checkpoint_path
+        else:
+            checkpoint_path = args.checkpoint
     else:
-        checkpoint_path = os.path.join(args.model_dir, "checkpoints", "final.ckpt")
-        logger.info(f"No checkpoint provided, using default: {checkpoint_path}")
+        checkpoint_path = str(final_checkpoint_path)
+        logger.info(f"No checkpoint provided, reverting to default: {checkpoint_path}")
+    if not Path(checkpoint_path).exists():
+        raise FileNotFoundError(checkpoint_path)
 
     # Get perturbation dimensions and mapping from data module
     var_dims_path = os.path.join(args.model_dir, "var_dims.pkl")

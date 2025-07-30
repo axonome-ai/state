@@ -1,4 +1,5 @@
 import argparse as ap
+from datetime import datetime
 
 from hydra import compose, initialize
 from omegaconf import DictConfig
@@ -43,6 +44,9 @@ def load_hydra_config(method: str, overrides: list[str] = None) -> DictConfig:
                 cfg = compose(config_name="config", overrides=overrides)
             case _:
                 raise ValueError(f"Unknown method: {method}")
+
+    if cfg['name'] == 'debug':
+        cfg['name'] = datetime.now().isoformat()
     return cfg
 
 

@@ -17,6 +17,22 @@ return_adatas: false
 pred_adata_path: null
 true_adata_path: null
 
+
+validations:
+  diff_exp:
+    enable: false
+    eval_interval_multiple: 1
+    obs_pert_col: target_gene
+    obs_filter_label: non-targeting
+    top_k_rank: 200
+    method: null
+
+  perturbation:
+    enable: true
+    eval_interval_multiple: 1
+    pert_col: target_gene
+    ctrl_label: non-targeting
+
 # don't save hydra output
 hydra:
   output_subdir: null

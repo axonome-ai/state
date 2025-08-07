@@ -1,6 +1,8 @@
 import time
 import logging
 from contextlib import contextmanager
+from pathlib import Path
+
 from lightning.pytorch.loggers import CSVLogger, WandbLogger
 from lightning.pytorch.loggers.csv_logs import CSVLogger as BaseCSVLogger
 import csv
@@ -161,7 +163,7 @@ def get_checkpoint_callbacks(output_dir: str, name: str, val_freq: int, ckpt_eve
     return callbacks
 
 
-def get_lightning_module(model_type: str, data_config: dict, model_config: dict, training_config: dict, var_dims: dict):
+def get_lightning_module(model_type: str, data_config: dict, model_config: dict, training_config: dict, validation_config: dict,  var_dims: dict):
     """Create model instance based on config."""
     # combine the model config and training config
     module_config = {**model_config, **training_config}
@@ -210,7 +212,7 @@ def get_lightning_module(model_type: str, data_config: dict, model_config: dict,
             output_dim=var_dims["output_dim"],
             pert_dim=var_dims["pert_dim"],
             batch_dim=var_dims["batch_dim"],
-            **module_config,
+            **{**module_config, **{'name': '', 'data': {'kwargs': data_config}, 'validation': validation_config}},
         )
     elif model_type.lower() == "globalsimplesum" or model_type.lower() == "perturb_mean":
         from ...tx.models.perturb_mean import PerturbMeanPerturbationModel

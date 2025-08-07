@@ -163,6 +163,7 @@ def run_tx_train(cfg: DictConfig):
         cfg["data"]["kwargs"],
         cfg["model"]["kwargs"],
         cfg["training"],
+        {'name': cfg['name'], **cfg["validations"]},
         data_module.get_var_dims(),
     )
 

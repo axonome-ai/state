@@ -13,7 +13,7 @@ from .base import PerturbationModel
 from .decoders import FinetuneVCICountsDecoder
 from .decoders_nb import NBDecoder, nb_nll
 from .utils import build_mlp, get_activation_class, get_transformer_backbone
-
+from ..utils.metric_utils import perturbation_metrics, de_metric, build_anndata
 
 logger = logging.getLogger(__name__)
 
@@ -159,6 +159,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
         self.distributional_loss = distributional_loss
         self.gene_dim = gene_dim
+
+        self.cfg = kwargs
+        self._last_val_perturbation_check = 0
+        self._last_val_de_check = 0
 
         # Build the distributional loss from geomloss
         blur = kwargs.get("blur", 0.05)
@@ -574,6 +578,8 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.log("val/confidence_loss", confidence_loss)
             self.log("val/actual_loss", loss_target.mean())
 
+        #  cache storing logic below for metrics for competition
+        self._cache_batch_for_metrics(batch, pred, target)
         return {"loss": loss, "predictions": pred}
 
     def test_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> None:
@@ -601,6 +607,8 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # Compute confidence loss
             confidence_loss = self.confidence_loss_fn(confidence_pred.squeeze(), loss_target.squeeze())
             self.log("test/confidence_loss", confidence_loss)
+
+        self._cache_batch_for_metrics(batch, pred, target)
 
     def predict_step(self, batch, batch_idx, padded=True, **kwargs):
         """
@@ -637,5 +645,169 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 pert_cell_counts_preds = self.gene_decoder(latent_output)
 
             output_dict["pert_cell_counts_preds"] = pert_cell_counts_preds
-
         return output_dict
+
+    def _cache_batch_for_metrics(
+            self,
+            batch: Dict[str, torch.Tensor],
+            emb_pred: torch.Tensor,
+            emb_target: torch.Tensor,
+    ) -> None:
+        """
+        Push this batch into `_metric_cache` **only** when metric collection
+        is active (`self._collect_metrics` is set in
+        `on_validation_epoch_start`).
+
+        • Calculates gene-space predictions *here* (re-using self.gene_decoder)
+          **only when** the DE metric is scheduled.
+        • No assumptions about what happens inside validation_step.
+        """
+        if not getattr(self, "_collect_metrics", False):
+            return
+
+        cache = self._metric_cache
+
+        # ----- embeddings -----
+        cache["emb_pred"].append(emb_pred.detach().cpu())
+        cache["emb_real"].append(emb_target.detach().cpu())
+
+        # ----- labels -----
+        cache["pert"].extend(batch["pert_name"])
+        cache["ctype"].extend(batch["cell_type"])
+
+        if "batch" in batch:
+            b = batch["batch"]
+            items = b.cpu().tolist() if torch.is_tensor(b) else b
+            cache["batch"].extend([str(x) for x in items])
+
+        # ----- gene counts for DE metric -----
+        if self._compute_de and self.gene_decoder is not None and "pert_cell_counts" in batch:
+            # recompute gene predictions from emb_pred
+            if isinstance(self.gene_decoder, NBDecoder):
+                mu, _ = self.gene_decoder(emb_pred)
+                counts_pred = mu
+            else:
+                counts_pred = self.gene_decoder(emb_pred)
+
+            counts_true = batch["pert_cell_counts"]
+
+            cache["counts_pred"].append(counts_pred.detach().cpu())
+            cache["counts_real"].append(counts_true.detach().cpu())
+
+    def on_validation_epoch_start(self) -> None:
+        """
+        Decide whether the two validation metrics should run **this epoch**
+        and, if so, prepare an in-memory cache (rank-0 only).
+        """
+        cfg = self.cfg
+        step = self.global_step
+        freq = cfg["val_freq"]
+
+        # ── check perturbation metric ─────────────────────────────
+        run_pert = False
+        if cfg["validation"]["perturbation"]["enable"]:
+            interval = cfg["validation"]["perturbation"]["eval_interval_multiple"] * freq
+            last = getattr(self, "_last_val_perturbation_check", -1)
+            run_pert = (step - last) >= interval and step != 0
+
+        # ── check differential-expression metric ─────────────────
+        run_de = False
+        if cfg["validation"]["diff_exp"]["enable"]:
+            interval = cfg["validation"]["diff_exp"]["eval_interval_multiple"] * freq
+            last = getattr(self, "_last_val_de_check", -1)
+            run_de = (step - last) >= interval and step != 0
+
+        # will we collect any metrics this epoch?
+        self._compute_perturb = run_pert
+        self._compute_de = run_de
+        self._collect_metrics = (self.global_rank == 0) and (run_pert or run_de)
+
+        if self._collect_metrics:
+            self._metric_cache = {
+                "emb_pred": [],
+                "emb_real": [],
+                "counts_pred": [],
+                "counts_real": [],
+                "pert": [],
+                "ctype": [],
+                "batch": [],
+            }
+
+
+    @torch.no_grad()
+    def on_validation_epoch_end(self) -> None:  # type: ignore[override]
+        if not self._collect_metrics:
+            return
+        try:
+            self.eval()
+            c   = self._metric_cache
+            cfg = self.cfg
+
+            # ---------- concatenate cached tensors ----------
+            emb_pred = torch.cat(c["emb_pred"]).numpy()
+            emb_real = torch.cat(c["emb_real"]).numpy()
+            pert     = c["pert"]
+            ctype    = c["ctype"]
+            batch_id = c["batch"]
+
+
+            # ---------- perturbation metric ----------
+            if self._compute_perturb:
+                ad_emb = build_anndata(
+                    x_matrix=emb_real,
+                    embeddings=emb_pred,
+                    perturbations=pert,
+                    cell_types=ctype,
+                    pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
+                    batches=batch_id,
+                )
+
+                col_id     = cfg["validation"]["perturbation"]["pert_col"]
+                ctrl_label = cfg["validation"]["perturbation"]["ctrl_label"]
+
+                corr, rank = perturbation_metrics(ad_emb, col_id, ctrl_label)
+                self.log("perturbation_correlation_mean", corr, sync_dist=True)
+                self.log("perturbation_ranking_mean", rank, sync_dist=True)
+                self._last_val_perturbation_check = self.global_step
+
+            self.trainer.strategy.barrier()
+
+            # ---------- differential-expression metric ----------
+            if self._compute_de and c["counts_pred"]:
+                counts_pred = torch.cat(c["counts_pred"]).numpy()
+                counts_real = torch.cat(c["counts_real"]).numpy()
+                var_names   = self.hparams.get("gene_names")
+
+                ad_pred = build_anndata(
+                    counts_pred, counts_pred,
+                    perturbations=pert,
+                    cell_types=ctype,
+                    pert_col_name=cfg["validation"]["diff_exp"]["obs_pert_col"],
+                    batches=batch_id,
+                    var_names=var_names,
+                )
+                ad_real = build_anndata(
+                    counts_real, counts_real,
+                    perturbations=pert,
+                    cell_types=ctype,
+                    pert_col_name=cfg["validation"]["diff_exp"]["obs_pert_col"],
+                    batches=batch_id,
+                    var_names=var_names,
+                )
+
+                de_score = de_metric(
+                    ad_pred,
+                    ad_real,
+                    col_id     = cfg["validation"]["diff_exp"]["obs_pert_col"],
+                    ctrl_label = cfg["validation"]["diff_exp"]["obs_filter_label"],
+                    k          = cfg["validation"]["diff_exp"]["top_k_rank"],
+                    method     = cfg["validation"]["diff_exp"]["method"],
+                )
+                self.log("de", de_score, sync_dist=True)
+                self._last_val_de_check = self.global_step
+
+            self.trainer.strategy.barrier()
+
+        finally:
+            self.train()
+            delattr(self, "_metric_cache")

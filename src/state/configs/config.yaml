@@ -28,7 +28,7 @@ validations:
     method: null
 
   perturbation:
-    enable: true
+    enable: false
     eval_interval_multiple: 1
     pert_col: target_gene
     ctrl_label: non-targeting

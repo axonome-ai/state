@@ -1,10 +1,13 @@
 import logging
+import tempfile
+from pathlib import Path
 from typing import Dict, Optional
 
 import anndata as ad
 import numpy as np
 import torch
 import torch.nn as nn
+from cell_eval import MetricsEvaluator
 
 from geomloss import SamplesLoss
 from typing import Tuple
@@ -13,7 +16,7 @@ from .base import PerturbationModel
 from .decoders import FinetuneVCICountsDecoder
 from .decoders_nb import NBDecoder, nb_nll
 from .utils import build_mlp, get_activation_class, get_transformer_backbone
-from ..utils.metric_utils import perturbation_metrics, de_metric, build_anndata
+from ..utils.metric_utils import build_anndata
 
 logger = logging.getLogger(__name__)
 
@@ -736,78 +739,83 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
     @torch.no_grad()
     def on_validation_epoch_end(self) -> None:  # type: ignore[override]
-        if not self._collect_metrics:
+        """Run VCC profile once per validation epoch and log required metrics."""
+        if not getattr(self, "_collect_metrics", False):
             return
+
         try:
             self.eval()
-            c   = self._metric_cache
+
             cfg = self.cfg
+            cache = self._metric_cache
 
-            # ---------- concatenate cached tensors ----------
-            emb_pred = torch.cat(c["emb_pred"]).numpy()
-            emb_real = torch.cat(c["emb_real"]).numpy()
-            pert     = c["pert"]
-            ctype    = c["ctype"]
-            batch_id = c["batch"]
+            # ------------------------------------------------------------------
+            # Build AnnData objects
+            # ------------------------------------------------------------------
+            emb_pred = torch.cat(cache["emb_pred"]).numpy()
+            emb_real = torch.cat(cache["emb_real"]).numpy()
 
+            ad_pred = build_anndata(
+                x_matrix=emb_pred,
+                embeddings=emb_pred,
+                perturbations=cache["pert"],
+                cell_types=cache["ctype"],
+                pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
+                batches=cache["batch"],
+            )
+            ad_real = build_anndata(
+                x_matrix=emb_real,
+                embeddings=emb_real,
+                perturbations=cache["pert"],
+                cell_types=cache["ctype"],
+                pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
+                batches=cache["batch"],
+            )
 
-            # ---------- perturbation metric ----------
+            # ------------------------------------------------------------------
+            # Determine metrics to skip
+            # ------------------------------------------------------------------
+            skip_metrics: list[str] = []
+            if not self._compute_perturb:
+                skip_metrics.append("discrimination_score_l1")
+            if not self._compute_de:
+                skip_metrics.append("overlap_at_N")
+
+            evaluator = MetricsEvaluator(
+                adata_pred=ad_pred,
+                adata_real=ad_real,
+                control_pert=cfg["validation"]["perturbation"]["ctrl_label"],
+                pert_col=cfg["validation"]["perturbation"]["pert_col"],
+                outdir=None,
+                batch_size=2048,
+            )
+
+            results_df, _ = evaluator.compute(
+                profile="vcc",
+                skip_metrics=skip_metrics,
+                write_csv=False,
+            )
+
+            # ------------------------------------------------------------------
+            # Log metrics
+            # ------------------------------------------------------------------
+            mae = results_df.select("mae")[0, 0]
+            self.log("validation/mae", mae, sync_dist=True)
+
             if self._compute_perturb:
-                ad_emb = build_anndata(
-                    x_matrix=emb_real,
-                    embeddings=emb_pred,
-                    perturbations=pert,
-                    cell_types=ctype,
-                    pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
-                    batches=batch_id,
-                )
-
-                col_id     = cfg["validation"]["perturbation"]["pert_col"]
-                ctrl_label = cfg["validation"]["perturbation"]["ctrl_label"]
-
-                corr, rank = perturbation_metrics(ad_emb, col_id, ctrl_label)
-                self.log("perturbation_correlation_mean", corr, sync_dist=True)
-                self.log("perturbation_ranking_mean", rank, sync_dist=True)
+                rank = results_df.select("discrimination_score_l1")[0, 0]
+                self.log("validation/perturbation_rank", rank, sync_dist=True)
                 self._last_val_perturbation_check = self.global_step
 
-            self.trainer.strategy.barrier()
-
-            # ---------- differential-expression metric ----------
-            if self._compute_de and c["counts_pred"]:
-                counts_pred = torch.cat(c["counts_pred"]).numpy()
-                counts_real = torch.cat(c["counts_real"]).numpy()
-                var_names   = self.hparams.get("gene_names")
-
-                ad_pred = build_anndata(
-                    counts_pred, counts_pred,
-                    perturbations=pert,
-                    cell_types=ctype,
-                    pert_col_name=cfg["validation"]["diff_exp"]["obs_pert_col"],
-                    batches=batch_id,
-                    var_names=var_names,
-                )
-                ad_real = build_anndata(
-                    counts_real, counts_real,
-                    perturbations=pert,
-                    cell_types=ctype,
-                    pert_col_name=cfg["validation"]["diff_exp"]["obs_pert_col"],
-                    batches=batch_id,
-                    var_names=var_names,
-                )
-
-                de_score = de_metric(
-                    ad_pred,
-                    ad_real,
-                    col_id     = cfg["validation"]["diff_exp"]["obs_pert_col"],
-                    ctrl_label = cfg["validation"]["diff_exp"]["obs_filter_label"],
-                    k          = cfg["validation"]["diff_exp"]["top_k_rank"],
-                    method     = cfg["validation"]["diff_exp"]["method"],
-                )
-                self.log("de", de_score, sync_dist=True)
+            if self._compute_de:
+                overlap = results_df.select("overlap_at_N")[0, 0]
+                self.log("validation/overlap_at_N", overlap, sync_dist=True)
                 self._last_val_de_check = self.global_step
 
             self.trainer.strategy.barrier()
 
         finally:
             self.train()
-            delattr(self, "_metric_cache")
+            if hasattr(self, "_metric_cache"):
+                del self._metric_cache
+

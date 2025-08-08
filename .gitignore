@@ -17,3 +17,6 @@ notebooks/
 competition/
 
 wandb/
+
+.ipynb_checkpoints/
+competition_support_set/

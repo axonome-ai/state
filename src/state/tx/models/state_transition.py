@@ -192,6 +192,15 @@ class StateTransitionPerturbationModel(PerturbationModel):
             )
             self.batch_dim = batch_dim
 
+        # Add an optional encoder that introduces phase variable
+        self.phase = kwargs.get("phase", False)
+        if self.phase:
+            self.phase_dim = 3 # HARDCODED DIMENSIONALITY FOR NOW
+            self.phase_encoder = nn.Embedding(
+                num_embeddings=self.phase_dim,
+                embedding_dim=hidden_dim,
+            )
+        
         # if the model is outputting to counts space, apply relu
         # otherwise its in embedding space and we don't want to
         is_gene_space = kwargs["embed_key"] == "X_hvg" or kwargs["embed_key"] is None
@@ -326,6 +335,9 @@ class StateTransitionPerturbationModel(PerturbationModel):
         The `padded` argument here is set to True if the batch is padded. Otherwise, we
         expect a single batch, so that sentences can vary in length across batches.
         """
+
+        # See if our new data arrived
+        # print(batch.keys())
         if padded:
             pert = batch["pert_emb"].reshape(-1, self.cell_sentence_len, self.pert_dim)
             basal = batch["ctrl_cell_emb"].reshape(-1, self.cell_sentence_len, self.input_dim)
@@ -360,6 +372,28 @@ class StateTransitionPerturbationModel(PerturbationModel):
             batch_embeddings = self.batch_encoder(batch_indices.long())  # Shape: [B, S, hidden_dim]
             seq_input = seq_input + batch_embeddings
 
+        if self.phase:
+            # Extract phase indices (assume they are integers or convert from one-hot)
+            phase_indices = torch.stack(batch["phase_type_onehot"],dim=0).to('cuda:0')
+
+            # Handle one-hot encoded phase indices
+            if phase_indices.dim() > 1 and phase_indices.size(-1) == self.phase_dim:
+                phase_indices = phase_indices.argmax(-1)
+
+
+            # Reshape batch indices to match sequence structure
+            if padded:
+                phase_indices = phase_indices.reshape(-1, self.cell_sentence_len)
+            else:
+                phase_indices = phase_indices.reshape(1, -1)
+
+
+            # Get phase embeddings and add to sequence input
+            phase_embeddings = self.phase_encoder(phase_indices.long())  # Shape: [B, S, hidden_dim]
+            seq_input = seq_input + phase_embeddings
+
+
+        
         confidence_pred = None
         if self.confidence_token is not None:
             # Append confidence token: [B, S, E] -> [B, S+1, E]

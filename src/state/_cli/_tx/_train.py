@@ -28,7 +28,8 @@ def run_tx_train(cfg: DictConfig):
 
     from ...tx.callbacks import BatchSpeedMonitorCallback
     from ...tx.utils import get_checkpoint_callbacks, get_lightning_module, get_loggers
-
+    print(torch.__version__)
+    print(torch.version.cuda)
     logger = logging.getLogger(__name__)
     torch.set_float32_matmul_precision("medium")
 

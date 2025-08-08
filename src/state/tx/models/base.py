@@ -154,7 +154,11 @@ class PerturbationModel(ABC, LightningModule):
         super().__init__()
         self.decoder_cfg = decoder_cfg
         self.save_hyperparameters()
-        self.gene_decoder_bool = kwargs.get("gene_decoder_bool", True) 
+        
+        self.phase = kwargs.get("phase", False)
+        
+        print(f"Phase: {self.phase}")
+        self.gene_decoder_bool = kwargs.get("gene_decoder_bool", True)
 
         # Core architecture settings
         self.input_dim = input_dim

@@ -200,6 +200,8 @@ def run_tx_infer(args):
                 "pert_emb": pert_batch,  # Keep as 2D tensor
                 "pert_name": pert_names_batch,
                 "batch": torch.zeros((1, cell_sentence_len), device=device),  # Use (1, cell_sentence_len)
+                "phase_type_onehot": [torch.tensor([0.,0.,1.], device=device) for i in range(cell_sentence_len)],  # Currently at inference time, we are using a hardcoded phase as input, this needs to be replaced with the proper onehot from the batch
+
             }
 
             # Run inference on batch using padded=False like in working code

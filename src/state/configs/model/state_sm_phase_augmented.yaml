@@ -23,8 +23,8 @@ kwargs:
   use_basal_projection: False
   distributional_loss: energy
   gene_decoder_bool: False
+  regularization: 0.0
   init_from: null
-  regularization: 0.1
   transformer_backbone_key: llama
   transformer_backbone_kwargs:
       max_position_embeddings: ${model.kwargs.cell_set_len}
@@ -44,3 +44,4 @@ kwargs:
       tie_word_embeddings: false
       rotary_dim: 0
       use_rotary_embeddings: false
+  phase: True

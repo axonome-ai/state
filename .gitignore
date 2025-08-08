@@ -18,5 +18,5 @@ competition/
 
 wandb/
 
-.ipynb_checkpoints/
 competition_support_set/
+.ipynb_checkpoints/

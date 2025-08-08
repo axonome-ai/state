@@ -8,7 +8,7 @@ kwargs:
   num_workers: 12
   pin_memory: true
   n_basal_samples: 1
-  basal_mapping_strategy: phase
+  basal_mapping_strategy: random
   should_yield_control_cells: true
   batch_col: gem_group
   pert_col: gene

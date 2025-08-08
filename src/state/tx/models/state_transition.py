@@ -786,9 +786,11 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 adata_real=ad_real,
                 control_pert=cfg["validation"]["perturbation"]["ctrl_label"],
                 pert_col=cfg["validation"]["perturbation"]["pert_col"],
-                outdir=None,
+                outdir='/tmp/random_dir/',
                 batch_size=2048,
             )
+            evaluator.outdir = None
+
 
             results_df, _ = evaluator.compute(
                 profile="vcc",

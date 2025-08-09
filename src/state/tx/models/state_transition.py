@@ -741,6 +741,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
     def on_validation_epoch_end(self) -> None:  # type: ignore[override]
         """Run VCC profile once per validation epoch and log required metrics."""
         if not getattr(self, "_collect_metrics", False):
+            np.random.seed(self.global_step)
             return
 
         try:
@@ -820,4 +821,5 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.train()
             if hasattr(self, "_metric_cache"):
                 del self._metric_cache
+            np.random.seed(self.global_step)
 

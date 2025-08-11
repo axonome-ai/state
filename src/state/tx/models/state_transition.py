@@ -1,6 +1,5 @@
 import logging
-import tempfile
-from pathlib import Path
+import polars as pl
 from typing import Dict, Optional
 
 import anndata as ad
@@ -793,7 +792,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
             evaluator.outdir = None
 
 
-            results_df, _ = evaluator.compute(
+            _, agg_result = evaluator.compute(
                 profile="vcc",
                 skip_metrics=skip_metrics,
                 write_csv=False,
@@ -802,16 +801,16 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # ------------------------------------------------------------------
             # Log metrics
             # ------------------------------------------------------------------
-            mae = results_df.select("mae")[0, 0]
+            mae = agg_result.filter(pl.col("statistic") == "mean").select("mae").item()
             self.log("validation/mae", mae, sync_dist=True)
 
             if self._compute_perturb:
-                rank = results_df.select("discrimination_score_l1").mean()
-                self.log("validation/perturbation_rank", rank, sync_dist=True)
+                score = agg_result.filter(pl.col("statistic") == "mean").select("discrimination_score_l1").item()
+                self.log("validation/perturbation_rank", score, sync_dist=True)
                 self._last_val_perturbation_check = self.global_step
 
             if self._compute_de:
-                overlap = results_df.select("overlap_at_N").mean()
+                overlap = agg_result.filter(pl.col("statistic") == "mean").select("overlap_at_N").item()
                 self.log("validation/overlap_at_N", overlap, sync_dist=True)
                 self._last_val_de_check = self.global_step
 

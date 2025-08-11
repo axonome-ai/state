@@ -15,7 +15,7 @@ from .base import PerturbationModel
 from .decoders import FinetuneVCICountsDecoder
 from .decoders_nb import NBDecoder, nb_nll
 from .utils import build_mlp, get_activation_class, get_transformer_backbone
-from ..utils.metric_utils import build_anndata
+from ..utils.metric_utils import build_anndata, calculate_overall_score
 
 logger = logging.getLogger(__name__)
 
@@ -519,6 +519,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # Add regularization to total loss
             total_loss = total_loss + self.regularization * l1_loss
 
+        self.log("post_reg_train_loss", total_loss)
         return total_loss
 
     def validation_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> None:
@@ -705,6 +706,9 @@ class StateTransitionPerturbationModel(PerturbationModel):
         step = self.global_step
         freq = cfg["val_freq"]
 
+        # ── adding other metrics ─────────────────────────────
+        self.log("lr", self.lr, sync_dist=True)
+
         # ── check perturbation metric ─────────────────────────────
         run_pert = False
         if cfg["validation"]["perturbation"]["enable"]:
@@ -787,7 +791,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 control_pert=cfg["validation"]["perturbation"]["ctrl_label"],
                 pert_col=cfg["validation"]["perturbation"]["pert_col"],
                 outdir='/tmp/random_dir/',
-                batch_size=2048,
+                batch_size=2**12,
             )
             evaluator.outdir = None
 
@@ -801,18 +805,24 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # ------------------------------------------------------------------
             # Log metrics
             # ------------------------------------------------------------------
-            mae = agg_result.filter(pl.col("statistic") == "mean").select("mae").item()
-            self.log("validation/mae", mae, sync_dist=True)
+            mae_pred = agg_result.filter(pl.col("statistic") == "mean").select("mae").item()
+            self.log("validation/mae", mae_pred, sync_dist=True)
 
+            pds_pred = -1
             if self._compute_perturb:
-                score = agg_result.filter(pl.col("statistic") == "mean").select("discrimination_score_l1").item()
-                self.log("validation/perturbation_rank", score, sync_dist=True)
+                pds_pred = agg_result.filter(pl.col("statistic") == "mean").select("discrimination_score_l1").item()
+                self.log("validation/perturbation_rank", pds_pred, sync_dist=True)
                 self._last_val_perturbation_check = self.global_step
 
+            des_pred = -1
             if self._compute_de:
-                overlap = agg_result.filter(pl.col("statistic") == "mean").select("overlap_at_N").item()
-                self.log("validation/overlap_at_N", overlap, sync_dist=True)
+                des_pred = agg_result.filter(pl.col("statistic") == "mean").select("overlap_at_N").item()
+                self.log("validation/overlap_at_N", des_pred, sync_dist=True)
                 self._last_val_de_check = self.global_step
+
+            if self._compute_perturb and self._compute_de:
+                score = calculate_overall_score(des_pred, pds_pred, mae_pred)
+                self.log("validation/overall_score", score, sync_dist=True)
 
             self.trainer.strategy.barrier()
 

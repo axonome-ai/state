@@ -806,12 +806,12 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.log("validation/mae", mae, sync_dist=True)
 
             if self._compute_perturb:
-                rank = results_df.select("discrimination_score_l1")[0, 0]
+                rank = results_df.select("discrimination_score_l1").mean()
                 self.log("validation/perturbation_rank", rank, sync_dist=True)
                 self._last_val_perturbation_check = self.global_step
 
             if self._compute_de:
-                overlap = results_df.select("overlap_at_N")[0, 0]
+                overlap = results_df.select("overlap_at_N").mean()
                 self.log("validation/overlap_at_N", overlap, sync_dist=True)
                 self._last_val_de_check = self.global_step
 

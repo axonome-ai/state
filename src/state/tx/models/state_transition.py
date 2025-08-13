@@ -154,7 +154,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         self.decoder_loss_weight = kwargs.get("decoder_weight", 1.0)
         self.regularization = kwargs.get("regularization", 0.0)
         self.detach_decoder = kwargs.get("detach_decoder", False)
-        self.basal_dropout_prob = 0.1
+        self.basal_dropout_prob = kwargs.get("basal_dropout_prob", 0.)
 
         self.transformer_backbone_key = transformer_backbone_key
         self.transformer_backbone_kwargs = transformer_backbone_kwargs

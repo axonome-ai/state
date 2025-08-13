@@ -791,7 +791,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 control_pert=cfg["validation"]["perturbation"]["ctrl_label"],
                 pert_col=cfg["validation"]["perturbation"]["pert_col"],
                 outdir='/tmp/random_dir/',
-                batch_size=2**12,
+                batch_size=2**12,  # found to be the fastest
             )
             evaluator.outdir = None
 

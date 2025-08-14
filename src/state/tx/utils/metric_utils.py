@@ -63,3 +63,28 @@ def build_anndata(
     if var_names is not None:
         adata.var_names = var_names
     return adata
+
+
+def calculate_overall_score(des_pred, pds_pred, mae_pred):
+    # Baseline constants
+    DES_b = 0.106
+    PDS_b = 0.516
+    MAE_b = 0.027
+
+    # Calculate scaled DES
+    des_scaled = (des_pred - DES_b) / (1 - DES_b) if des_pred > DES_b else 0
+
+    # Calculate scaled PDS
+    pds_scaled = (pds_pred - PDS_b) / (1 - PDS_b) if pds_pred > PDS_b else 0
+
+    # Calculate scaled MAE
+    mae_scaled = (MAE_b - mae_pred) / MAE_b if mae_pred < MAE_b else 0
+
+    # Clip any negatives
+    des_scaled = max(des_scaled, 0)
+    pds_scaled = max(pds_scaled, 0)
+    mae_scaled = max(mae_scaled, 0)
+
+    # Overall score
+    overall = (des_scaled + pds_scaled + mae_scaled) / 3
+    return overall

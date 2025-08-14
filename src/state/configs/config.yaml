@@ -20,7 +20,7 @@ true_adata_path: null
 
 validations:
   diff_exp:
-    enable: false
+    enable: true
     eval_interval_multiple: 1
     obs_pert_col: target_gene
     obs_filter_label: non-targeting
@@ -28,7 +28,7 @@ validations:
     method: null
 
   perturbation:
-    enable: false
+    enable: true
     eval_interval_multiple: 1
     pert_col: target_gene
     ctrl_label: non-targeting

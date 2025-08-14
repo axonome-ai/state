@@ -387,7 +387,6 @@ class StateTransitionPerturbationModel(PerturbationModel):
             if phase_indices.dim() > 1 and phase_indices.size(-1) == self.phase_dim:
                 phase_indices = phase_indices.argmax(-1)
 
-
             # Reshape batch indices to match sequence structure
             if padded:
                 phase_indices = phase_indices.reshape(-1, self.cell_sentence_len)
@@ -775,6 +774,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
     def on_validation_epoch_end(self) -> None:  # type: ignore[override]
         """Run VCC profile once per validation epoch and log required metrics."""
         if not getattr(self, "_collect_metrics", False):
+            np.random.seed(self.global_step)
             return
 
         try:
@@ -826,7 +826,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
             evaluator.outdir = None
 
 
-            results_df, _ = evaluator.compute(
+            results_df, agg_results = evaluator.compute(
                 profile="vcc",
                 skip_metrics=skip_metrics,
                 write_csv=False,
@@ -835,16 +835,17 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # ------------------------------------------------------------------
             # Log metrics
             # ------------------------------------------------------------------
-            mae = results_df.select("mae")[0, 0]
-            self.log("validation/mae", mae, sync_dist=True)
 
+            mae = agg_results.select("mae")[2,0]
+            self.log("validation/mae", mae, sync_dist=True)
+            
             if self._compute_perturb:
-                rank = results_df.select("discrimination_score_l1")[0, 0]
+                rank = agg_results.select("discrimination_score_l1")[2,0]
                 self.log("validation/perturbation_rank", rank, sync_dist=True)
                 self._last_val_perturbation_check = self.global_step
 
             if self._compute_de:
-                overlap = results_df.select("overlap_at_N")[0, 0]
+                overlap = agg_results.select("overlap_at_N")[2,0]
                 self.log("validation/overlap_at_N", overlap, sync_dist=True)
                 self._last_val_de_check = self.global_step
 
@@ -854,4 +855,6 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.train()
             if hasattr(self, "_metric_cache"):
                 del self._metric_cache
+            np.random.seed(self.global_step)
+
 

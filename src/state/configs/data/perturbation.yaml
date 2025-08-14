@@ -8,7 +8,7 @@ kwargs:
   num_workers: 12
   pin_memory: true
   n_basal_samples: 1
-  basal_mapping_strategy: random
+  basal_mapping_strategy: phase
   should_yield_control_cells: true
   batch_col: gem_group
   pert_col: gene
@@ -19,7 +19,7 @@ kwargs:
   store_raw_basal: false
   int_counts: false
   barcode: true
-  phase: false
+  phase: true
   phase_key: phase
 output_dir: null
 debug: true

@@ -6,7 +6,9 @@ kwargs:
   cell_set_len: 128
   blur: 0.05
   hidden_dim: 672  # hidden dimension going into the transformer backbone
-  loss: energy
+  loss: se
+  sinkhorn_weight: 0.0
+  energy_weight: 1.0
   confidence_head: False
   n_encoder_layers: 4
   n_decoder_layers: 4
@@ -23,8 +25,8 @@ kwargs:
   use_basal_projection: False
   distributional_loss: energy
   gene_decoder_bool: False
+  regularization: 0.0
   init_from: null
-  regularization: 0.1
   transformer_backbone_key: llama
   transformer_backbone_kwargs:
       max_position_embeddings: ${model.kwargs.cell_set_len}
@@ -44,3 +46,4 @@ kwargs:
       tie_word_embeddings: false
       rotary_dim: 0
       use_rotary_embeddings: false
+  phase: False

@@ -54,6 +54,22 @@ def run_tx_infer(args):
             cfg = yaml.safe_load(f)
         return cfg
 
+    def generate_onehot_map(keys) -> dict:
+        """
+        Build a map from each unique key to a fixed-length one-hot torch vector.
+    
+        Args:
+            keys: iterable of hashable items
+        Returns:
+            dict[key, torch.FloatTensor]: one-hot encoding of length = number of unique keys
+        """
+        unique_keys = sorted(set(keys))
+        num_classes = len(unique_keys)
+        # identity matrix rows are one-hot vectors
+        onehots = torch.eye(num_classes)
+        return {k: onehots[i] for i, k in enumerate(unique_keys)}
+    
+
     # Load the config
     config_path = os.path.join(args.model_dir, "config.yaml")
     cfg = load_config(config_path)
@@ -115,7 +131,22 @@ def run_tx_infer(args):
         except:
             X = adata.X
         logger.info(f"Using adata.X as input features: shape {X.shape}")
+    
 
+    # Optionally get cell phases --------
+    phase = cfg["data"]["kwargs"]["phase"]
+    logger.info(f"Use cell phase set to: {phase} in config")
+    phase_type_onehot_map: dict[str, torch.Tensor] | None = None
+
+    if phase:
+        all_phasetypes = set()
+        all_phasetypes.update([item for item in adata.obs['phase'].unique()])
+        print("Cell Phases:", all_phasetypes)
+        phase_type_onehot_map = generate_onehot_map(all_phasetypes)
+        phases = [phase_type_onehot_map[p] for p in adata.obs['phase'].values]
+
+
+    # ---------------------------------
     # Prepare perturbation tensor using the data module's mapping
     pert_names = adata.obs[args.pert_col].values
     pert_tensor = torch.zeros((len(pert_names), pert_dim), device="cpu")  # Keep on CPU initially
@@ -172,7 +203,8 @@ def run_tx_infer(args):
     )
 
     all_preds = []
-
+    phase_batch = []
+    
     with torch.no_grad():
         progress_bar = tqdm(total=n_samples, desc="Processing samples", unit="samples")
 
@@ -181,6 +213,8 @@ def run_tx_infer(args):
             end_idx = min(start_idx + batch_size, n_samples)
             current_batch_size = end_idx - start_idx
 
+            if phase:
+                phase_batch = phases[start_idx:end_idx]
             # Get batch data
             X_batch = torch.tensor(X[start_idx:end_idx], dtype=torch.float32).to(device)
             pert_batch = pert_tensor[start_idx:end_idx].to(device)
@@ -192,6 +226,9 @@ def run_tx_infer(args):
                 padding_size = cell_sentence_len - current_batch_size
                 X_pad = torch.zeros((padding_size, X_batch.shape[1]), device=device)
                 X_batch = torch.cat([X_batch, X_pad], dim=0)
+                if phase: # pad phases if using phase encoder
+                    phase_pad = [torch.zeros(phase_batch[0].shape[0]) for i in range(padding_size)] # create list of 0 tensors
+                    phase_batch = phase_batch + phase_pad
 
                 # Pad perturbation tensor with control perturbation
                 pert_pad = torch.zeros((padding_size, pert_batch.shape[1]), device=device)
@@ -210,7 +247,8 @@ def run_tx_infer(args):
                 "pert_emb": pert_batch,  # Keep as 2D tensor
                 "pert_name": pert_names_batch,
                 "batch": torch.zeros((1, cell_sentence_len), device=device),  # Use (1, cell_sentence_len)
-                "phase_type_onehot": [torch.tensor([0.,0.,1.], device=device) for i in range(cell_sentence_len)],  # Currently at inference time, we are using a hardcoded phase as input, this needs to be replaced with the proper onehot from the batch
+                "phase_type_onehot": phase_batch,
+                # "phase_type_onehot": [torch.tensor([0.,0.,0.], device=device) for i in range(cell_sentence_len)],  # Currently at inference time, we are using a hardcoded phase as input, this needs to be replaced with the proper onehot from the batch
 
             }
 

@@ -19,3 +19,5 @@ competition/
 wandb/
 
 exploration/
+
+cell_eval_results/

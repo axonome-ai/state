@@ -14,6 +14,9 @@ def add_arguments_infer(parser: argparse.ArgumentParser):
     parser.add_argument(
         "--pert_col", type=str, default="drugname_drugconc", help="Column in adata.obs for perturbation labels"
     )
+    parser.add_argument(
+        "--ctrl_pert", type=str, default="non-targeting", help="Control gene used for control_pert option"
+    )
     parser.add_argument("--output", type=str, default=None, help="Path to output AnnData file (.h5ad)")
     parser.add_argument(
         "--model_dir",
@@ -28,6 +31,7 @@ def add_arguments_infer(parser: argparse.ArgumentParser):
         "--celltypes", type=str, default=None, help="Comma-separated list of cell types to include (optional)"
     )
     parser.add_argument("--batch_size", type=int, default=1000, help="Batch size for inference (default: 1000)")
+    parser.add_argument("--ctrl_pert_option", choices=["replace", None])
 
 
 def run_tx_infer(args):
@@ -93,6 +97,12 @@ def run_tx_infer(args):
     adata = sc.read_h5ad(args.adata)
 
     # Optionally filter by cell type
+    # if args.ctrl_pert_option == 'skip':
+    #     if args.pert_col not in adata.obs:
+    #         raise ValueError(f"Column '{args.pert_col}' not found in adata.obs.")
+    #     initial_n = adata.n_obs
+    #     adata = adata[adata.obs[args.pert_col] != args.ctrl_pert].copy()
+    #     logger.info(f"Filtered AnnData to {adata.n_obs} cells excluding control type {args.ctrl_pert} (from {initial_n} cells)")
     if args.celltype_col is not None and args.celltypes is not None:
         celltypes = [ct.strip() for ct in args.celltypes.split(",")]
         if args.celltype_col not in adata.obs:
@@ -226,6 +236,21 @@ def run_tx_infer(args):
 
             # Only keep predictions for the actual samples (not padding)
             actual_preds = pred_tensor[:current_batch_size]
+            if args.ctrl_pert_option == "replace":
+                # Build a vectorized mask for control perturbations
+                if args.ctrl_pert in pert_onehot_map:
+                    ctrl_vec = pert_onehot_map[args.ctrl_pert].to(pert_batch.device)
+                    mask = (pert_batch[:current_batch_size] == ctrl_vec).all(dim=1)  # shape: [N]
+                else:
+                    # Fallback using names; list->tensor just to create the mask
+                    mask = torch.tensor(
+                        [p == args.ctrl_pert for p in pert_names_batch[:current_batch_size]],
+                        device=actual_preds.device
+                    )
+
+                # Replace rows where mask is True with the corresponding inputs
+                actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
+
             all_preds.append(actual_preds.cpu().numpy())
 
             # Update progress bar

@@ -17,3 +17,7 @@ notebooks/
 competition/
 
 wandb/
+
+cell_eval_results/
+
+exploration/

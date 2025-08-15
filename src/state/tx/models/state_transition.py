@@ -543,6 +543,8 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.log("val/sinkhorn_loss", sinkhorn_component)
             self.log("val/energy_loss", energy_component)
 
+        pert_cell_counts_preds = None
+        gene_targets = None
         if self.gene_decoder is not None and "pert_cell_counts" in batch:
             gene_targets = batch["pert_cell_counts"]
 
@@ -581,8 +583,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.log("val/confidence_loss", confidence_loss)
             self.log("val/actual_loss", loss_target.mean())
 
+
+        # TODO: gene target should be recorded and used for metrics
         #  cache storing logic below for metrics for competition
-        self._cache_batch_for_metrics(batch, pred, target)
+        self._cache_batch_for_metrics(batch, pred, target, gene_targets, pert_cell_counts_preds)
         return {"loss": loss, "predictions": pred}
 
     def test_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> None:
@@ -610,7 +614,6 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # Compute confidence loss
             confidence_loss = self.confidence_loss_fn(confidence_pred.squeeze(), loss_target.squeeze())
             self.log("test/confidence_loss", confidence_loss)
-
         self._cache_batch_for_metrics(batch, pred, target)
 
     def predict_step(self, batch, batch_idx, padded=True, **kwargs):
@@ -655,15 +658,13 @@ class StateTransitionPerturbationModel(PerturbationModel):
             batch: Dict[str, torch.Tensor],
             emb_pred: torch.Tensor,
             emb_target: torch.Tensor,
+            gene_targets: Optional[torch.tensor] = None,
+            pert_cell_counts_preds: Optional[torch.tensor] = None,
+
     ) -> None:
         """
         Push this batch into `_metric_cache` **only** when metric collection
-        is active (`self._collect_metrics` is set in
-        `on_validation_epoch_start`).
-
-        • Calculates gene-space predictions *here* (re-using self.gene_decoder)
-          **only when** the DE metric is scheduled.
-        • No assumptions about what happens inside validation_step.
+        is active (`self._collect_metrics` is set in `on_validation_epoch_start`).
         """
         if not getattr(self, "_collect_metrics", False):
             return
@@ -684,18 +685,9 @@ class StateTransitionPerturbationModel(PerturbationModel):
             cache["batch"].extend([str(x) for x in items])
 
         # ----- gene counts for DE metric -----
-        if self._compute_de and self.gene_decoder is not None and "pert_cell_counts" in batch:
-            # recompute gene predictions from emb_pred
-            if isinstance(self.gene_decoder, NBDecoder):
-                mu, _ = self.gene_decoder(emb_pred)
-                counts_pred = mu
-            else:
-                counts_pred = self.gene_decoder(emb_pred)
-
-            counts_true = batch["pert_cell_counts"]
-
-            cache["counts_pred"].append(counts_pred.detach().cpu())
-            cache["counts_real"].append(counts_true.detach().cpu())
+        if gene_targets is not None and pert_cell_counts_preds is not None:
+            cache["counts_pred"].append(pert_cell_counts_preds.detach().cpu())
+            cache["counts_real"].append(gene_targets.detach().cpu())
 
     def on_validation_epoch_start(self) -> None:
         """
@@ -756,20 +748,25 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # ------------------------------------------------------------------
             # Build AnnData objects
             # ------------------------------------------------------------------
-            emb_pred = torch.cat(cache["emb_pred"]).numpy()
-            emb_real = torch.cat(cache["emb_real"]).numpy()
+
+            if self._compute_de and self.gene_decoder is not None and "pert_cell_counts" in batch:
+                pred = torch.cat(cache["counts_pred"]).numpy()
+                real = torch.cat(cache["counts_real"]).numpy()
+            else:
+                pred = torch.cat(cache["emb_pred"]).numpy()
+                real = torch.cat(cache["emb_real"]).numpy()
 
             ad_pred = build_anndata(
-                x_matrix=emb_pred,
-                embeddings=emb_pred,
+                x_matrix=pred,
+                embeddings=real,
                 perturbations=cache["pert"],
                 cell_types=cache["ctype"],
                 pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
                 batches=cache["batch"],
             )
             ad_real = build_anndata(
-                x_matrix=emb_real,
-                embeddings=emb_real,
+                x_matrix=pred,
+                embeddings=real,
                 perturbations=cache["pert"],
                 cell_types=cache["ctype"],
                 pert_col_name=cfg["validation"]["perturbation"]["pert_col"],

@@ -16,6 +16,7 @@ kwargs:
   transformer_decoder: False
   finetune_vci_decoder: False
   residual_decoder: False
+  decoder_loss_weight: 1.0
   batch_encoder: False
   nb_decoder: False
   mask_attn: False
@@ -44,4 +45,4 @@ kwargs:
       tie_word_embeddings: false
       rotary_dim: 0
       use_rotary_embeddings: false
-  phase: True
+  phase: False

@@ -23,3 +23,5 @@ competition_support_set/
 model_evals/
 
 cell-eval-outdir/
+
+overfit_evals/

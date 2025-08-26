@@ -84,12 +84,12 @@ def run_tx_preprocess_infer(
     adata_modified = adata.copy()
     
     # Get all unique perturbations (non-control)
-    if hasattr(adata.obs[pert_col], 'cat'):
-        # Categorical column
-        unique_perturbations = adata.obs[pert_col].cat.categories
-    else:
+    # if hasattr(adata.obs[pert_col], 'cat'):
+    #     # Categorical column
+    #     unique_perturbations = adata.obs[pert_col].cat.categories
+    # else:
         # Regular column
-        unique_perturbations = adata.obs[pert_col].unique()
+    unique_perturbations = adata.obs[pert_col].unique()
     
     non_control_perturbations = [p for p in unique_perturbations if p != control_condition]
     

@@ -147,14 +147,15 @@ class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
 
         batch_size = batch_size or (1 if test else self.batch_size)
 
-        sampler = PerturbationBatchSampler(
-            dataset=ds,
-            batch_size=batch_size,
-            drop_last=False,
-            cell_sentence_len=self.cell_sentence_len,
-            test=test,
-            use_batch=use_batch,
-        )
+        # sampler = PerturbationBatchSampler(
+        #     dataset=ds,
+        #     batch_size=batch_size,
+        #     drop_last=False,
+        #     cell_sentence_len=self.cell_sentence_len,
+        #     test=test,
+        #     use_batch=use_batch,
+        # )
+        sampler = None
         out = DataLoader(
             ds,
             batch_sampler=sampler,

@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Prefer local src/ first
+export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
+
+ADATA="/home/hackerman/Github/state/competition_support_set/hepg2.h5"
+#MODEL_DIR="/home/hackerman/Github/axonome-state/competition/2025-07-28T18:55:06.027430/"
+MODEL_DIR="/home/hackerman/Downloads/hepg2_overfit/"
+CHECKPOINT="step=40000.ckpt"
+
+
+# ---- stems via Bash parameter expansion (no Python subprocess) ----
+# hepg2.h5 -> hepg2
+DATA_STEM="${ADATA##*/}"; DATA_STEM="${DATA_STEM%.*}"
+
+# 2025-07-28T18:55:06.027430/ -> 2025-07-28T18:55:06.027430
+MODEL_NAME="${MODEL_DIR%/}"; MODEL_NAME="${MODEL_NAME##*/}"
+# -------------------------------------------------------------------
+
+PREPRO_DIR="/home/hackerman/Github/state/competition_support_set/validation_data"
+OUT_DIR_BASE="/home/hackerman/Github/state/competition"
+
+mkdir -p "$PREPRO_DIR" "$OUT_DIR_BASE"
+
+# Seeds to test; adjust as needed
+#SEEDS=(42 1 2 3 4)
+# for SEED in "${SEEDS[@]}"; do
+# echo "=== Running with seed ${SEED} ==="
+
+# PREPRO_PATH="${PREpro_DIR:-$PREPRO_DIR}/${DATA_STEM}_preprocessed2_s${SEED}.h5"
+#python -m state tx preprocess_infer \
+#  --adata="$ADATA" \
+#  --output="$PREPRO_PATH" \
+#  --control_condition="non-targeting" \
+#  --pert_col="target_gene" \
+#  --seed="$SEED"
+# OUTPUT_PATH="${OUT_DIR_BASE//${MODEL_NAME}_${DATA_STEM}_s${SEED}.h5ad"
+
+SEED=42
+prepro=true  # or "false"
+
+if [[ "$prepro" == "true" ]]; then
+  PREPRO_PATH="${PREpro_DIR:-$PREPRO_DIR}/${DATA_STEM}_preprocessed2_s${SEED}.h5"
+  python -m state tx preprocess_infer \
+    --adata="$ADATA" \
+    --output="$PREPRO_PATH" \
+    --control_condition="non-targeting" \
+    --pert_col="target_gene" \
+    --seed="$SEED"
+  NAME="${MODEL_NAME}_${DATA_STEM}_s${SEED}_rng"
+  OUTPUT_PATH="${OUT_DIR_BASE}/${NAME}.h5ad"
+  python -m state tx infer \
+  --adata="$PREPRO_PATH" \
+  --output="$OUTPUT_PATH" \
+  --model_dir="$MODEL_DIR" \
+  --checkpoint=$CHECKPOINT \
+  --pert_col="target_gene" \
+  --ctrl_pert="non-targeting"
+
+  OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${NAME}"
+  mkdir -p "$OUTPUT_DIR"
+
+  python -m cell_eval run \
+    --profile=vcc \
+    -ar="$ADATA" \
+    -ap="$OUTPUT_PATH" \
+    --num-threads=12 \
+    --outdir="$OUTPUT_DIR"
+else
+  PREPRO_PATH=$ADATA
+  OUTPUT_PATH="${OUT_DIR_BASE}/${MODEL_NAME}_${DATA_STEM}.h5ad"
+  python -m state tx infer \
+    --adata="$PREPRO_PATH" \
+    --output="$OUTPUT_PATH" \
+    --model_dir="$MODEL_DIR" \
+    --checkpoint=$CHECKPOINT \
+    --pert_col="target_gene" \
+    --ctrl_pert="non-targeting"
+
+  # OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${MODEL_NAME}_${DATA_STEM}_s${SEED}"
+  OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${MODEL_NAME}_${DATA_STEM}"
+  mkdir -p "$OUTPUT_DIR"
+
+  python -m cell_eval run \
+    --profile=vcc \
+    -ar="$ADATA" \
+    -ap="$OUTPUT_PATH" \
+    --num-threads=12 \
+    --outdir="$OUTPUT_DIR"
+  # done
+fi
+# done

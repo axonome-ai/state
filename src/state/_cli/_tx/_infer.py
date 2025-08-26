@@ -1,5 +1,14 @@
 import argparse
+import glob
 from pathlib import Path
+from typing import Dict
+
+import h5py
+from cell_load.config import ExperimentConfig
+from cell_load.utils.data_utils import generate_onehot_map, safe_decode_array
+from hydra import compose, initialize_config_dir
+
+from state._cli._tx.dataloader import PerturbationDataModuleFromExperimentConfig
 
 
 def add_arguments_infer(parser: argparse.ArgumentParser):
@@ -30,8 +39,119 @@ def add_arguments_infer(parser: argparse.ArgumentParser):
     parser.add_argument(
         "--celltypes", type=str, default=None, help="Comma-separated list of cell types to include (optional)"
     )
+    parser.add_argument(
+        "--preprocess_with_cell_eval", type=bool, default=False, help="Should we preprocess using cell-load?"
+    )
     parser.add_argument("--batch_size", type=int, default=1000, help="Batch size for inference (default: 1000)")
     parser.add_argument("--ctrl_pert_option", choices=["replace", None])
+
+
+def _expand_braces(pattern: str) -> list[str]:
+    """Expand brace patterns like {a,b,c} into multiple patterns."""
+
+    def expand_single_brace(text: str) -> list[str]:
+        # Find the first brace group
+        import re
+        match = re.search(r"\{([^}]+)\}", text)
+        if not match:
+            return [text]
+
+        # Extract the options and expand them
+        before = text[: match.start()]
+        after = text[match.end() :]
+        options = match.group(1).split(",")
+
+        results = []
+        for option in options:
+            new_text = before + option.strip() + after
+            # Recursively expand any remaining braces
+            results.extend(expand_single_brace(new_text))
+
+        return results
+
+    return expand_single_brace(pattern)
+def _find_dataset_files(dataset_path: Path) -> dict[str, Path]:
+    files: Dict[str, Path] = {}
+    path_str = str(dataset_path)
+
+    # Check if path contains glob patterns
+    if any(char in path_str for char in "*?[]{}"):
+        # Handle brace expansion manually since Python glob doesn't support it
+        expanded_patterns = _expand_braces(path_str)
+
+        for pattern in expanded_patterns:
+            if pattern.startswith("/"):
+                # Absolute path - use glob.glob()
+                if pattern.endswith((".h5", ".h5ad")):
+                    # Pattern already specifies file extension
+                    for fpath_str in sorted(glob.glob(pattern)):
+                        fpath = Path(fpath_str)
+                        files[fpath.stem] = fpath
+                else:
+                    # Pattern doesn't specify extension, add file patterns
+                    for ext in ("*.h5", "*.h5ad"):
+                        full_pattern = f"{pattern.rstrip('/')}/{ext}"
+                        for fpath_str in sorted(glob.glob(full_pattern)):
+                            fpath = Path(fpath_str)
+                            files[fpath.stem] = fpath
+            else:
+                # Relative path - use Path.glob()
+                if pattern.endswith((".h5", ".h5ad")):
+                    for fpath in sorted(Path().glob(pattern)):
+                        files[fpath.stem] = fpath
+                else:
+                    for ext in ("*.h5", "*.h5ad"):
+                        full_pattern = f"{pattern.rstrip('/')}/{ext}"
+                        for fpath in sorted(Path().glob(full_pattern)):
+                            files[fpath.stem] = fpath
+    else:
+        # No glob patterns - treat as regular path
+        if dataset_path.is_file():
+            # Single file
+            files[dataset_path.stem] = dataset_path
+        else:
+            # Directory - search for files
+            for ext in ("*.h5", "*.h5ad"):
+                for fpath in sorted(dataset_path.glob(ext)):
+                    files[fpath.stem] = fpath
+
+    return files
+
+def _setup_global_maps(dataset_paths, pert_col, batch_col, cell_type_key):
+    """
+    Set up global one-hot maps for perturbations and batches.
+    For perturbations, we scan through all files in all train_specs and test_specs.
+    """
+    all_perts = set()
+    all_batches = set()
+    all_celltypes = set()
+
+    for dataset_path in dataset_paths:
+        files = _find_dataset_files(dataset_path)
+
+        for _fname, fpath in files.items():
+            with h5py.File(fpath, "r") as f:
+                pert_arr = f[f"obs/{pert_col}/categories"][:]
+                perts = set(safe_decode_array(pert_arr))
+                all_perts.update(perts)
+
+                try:
+                    batch_arr = f[f"obs/{batch_col}/categories"][:]
+                except KeyError:
+                    batch_arr = f[f"obs/{batch_col}"][:]
+                batches = set(safe_decode_array(batch_arr))
+                all_batches.update(batches)
+
+                try:
+                    celltype_arr = f[f"obs/{cell_type_key}/categories"][:]
+                except KeyError:
+                    celltype_arr = f[f"obs/{cell_type_key}"][:]
+                celltypes = set(safe_decode_array(celltype_arr))
+                all_celltypes.update(celltypes)
+
+    batch_onehot_map = generate_onehot_map(all_batches)
+    cell_type_onehot_map = generate_onehot_map(all_celltypes)
+    return batch_onehot_map, cell_type_onehot_map
 
 
 def run_tx_infer(args):
@@ -49,6 +169,7 @@ def run_tx_infer(args):
 
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
+    preprocess_with_cell_eval = args.preprocess_with_cell_eval
 
     def load_config(cfg_path: str) -> dict:
         """Load config from the YAML file that was dumped during training."""
@@ -77,7 +198,11 @@ def run_tx_infer(args):
         checkpoint_path = str(final_checkpoint_path)
         logger.info(f"No checkpoint provided, reverting to default: {checkpoint_path}")
     if not Path(checkpoint_path).exists():
-        raise FileNotFoundError(checkpoint_path)
+        if not Path(checkpoint_path).exists():
+            logger.info(f'Failed to find {checkpoint_path}, looking in model dir.')
+            checkpoint_path = checkpoint_dir / checkpoint_path
+            if not Path(checkpoint_path).exists():
+                raise FileNotFoundError(checkpoint_path)
 
     # Get perturbation dimensions and mapping from data module
     var_dims_path = os.path.join(args.model_dir, "var_dims.pkl")
@@ -103,6 +228,7 @@ def run_tx_infer(args):
     #     initial_n = adata.n_obs
     #     adata = adata[adata.obs[args.pert_col] != args.ctrl_pert].copy()
     #     logger.info(f"Filtered AnnData to {adata.n_obs} cells excluding control type {args.ctrl_pert} (from {initial_n} cells)")
+
     if args.celltype_col is not None and args.celltypes is not None:
         celltypes = [ct.strip() for ct in args.celltypes.split(",")]
         if args.celltype_col not in adata.obs:
@@ -150,7 +276,7 @@ def run_tx_infer(args):
         logger.warning(f"Missing perturbations: {list(missing)[:10]}")
 
     # Check if there's a control perturbation that might match
-    control_pert = cfg["data"]["kwargs"]["control_pert"]
+    control_pert = args.ctrl_pert
     if args.pert_col == "drugname_drugconc":  # quick hack for tahoe
         control_pert = "[('DMSO_TF', 0.0, 'uM')]"
     logger.info(f"Control perturbation in data module: '{control_pert}'")
@@ -171,11 +297,45 @@ def run_tx_infer(args):
 
     logger.info(f"Matched {matched_count} out of {len(pert_names)} perturbations")
 
+
+
     # Process in batches with progress bar
     # Use cell_sentence_len as batch size since model expects this
     n_samples = len(pert_names)
     batch_size = cell_sentence_len  # Model requires this exact batch size
     n_batches = (n_samples + batch_size - 1) // batch_size  # Ceiling division
+
+    cfg_dir = str(Path(__file__).resolve().parents[2] / "configs")
+
+    with initialize_config_dir(version_base=None, config_dir=cfg_dir):
+        default_cfg = compose(config_name="config")
+
+    kwargs = {**default_cfg['data']['kwargs']}
+
+    kwargs['num_workers'] = 8
+    kwargs['batch_col'] = "batch_var"
+    kwargs['pert_col'] = "target_gene"
+    kwargs['cell_type_key'] = "cell_type"
+    kwargs['control_pert'] = "non-targeting"
+    kwargs['perturbation_features_file'] = "/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt"
+    kwargs["batch_size"] = batch_size
+    kwargs["cell_sentence_len"] = cell_sentence_len
+    kwargs['pert_col'] = args.pert_col
+    kwargs['embed_key'] = args.embed_key
+    kwargs['control_pert'] = control_pert
+
+    exp_config = ExperimentConfig(datasets={'replogle_h1': str(Path(args.adata).parent)}, training={},
+                                  zeroshot={f'replogle_h1.{Path(args.adata).stem}': 'test'},
+                                  fewshot={})
+
+    data_module = PerturbationDataModuleFromExperimentConfig(exp_config,
+                                                            **kwargs,
+                                                            )
+    data_module.setup(stage="fit")
+    dl = data_module.test_dataloader()
+    print("num_workers:", dl.num_workers)
+    print("batch size:", dl.batch_size)
+
 
     logger.info(
         f"Running inference on {n_samples} samples in {n_batches} batches of size {batch_size} (model's cell_sentence_len)..."
@@ -184,46 +344,30 @@ def run_tx_infer(args):
     all_preds = []
 
     with torch.no_grad():
+        device = torch.device("cuda", 0)
+
         progress_bar = tqdm(total=n_samples, desc="Processing samples", unit="samples")
+        for batch_idx, batch in enumerate(dl):
+            # print(list(batch.keys()))
+            # print('batch["pert_emb"].shape', batch["pert_emb"].shape)
+            # print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
+            # print('cell_sentence_len', cell_sentence_len)
+            # print('batch["pert_emb"]', batch["pert_emb"])
+            # print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
 
-        for batch_idx in range(n_batches):
-            start_idx = batch_idx * batch_size
-            end_idx = min(start_idx + batch_size, n_samples)
-            current_batch_size = end_idx - start_idx
 
-            # Get batch data
-            X_batch = torch.tensor(X[start_idx:end_idx], dtype=torch.float32).to(device)
-            pert_batch = pert_tensor[start_idx:end_idx].to(device)
-            pert_names_batch = pert_names[start_idx:end_idx].tolist()
-
-            # Pad the batch to cell_sentence_len if it's the last incomplete batch
-            if current_batch_size < cell_sentence_len:
-                # Pad with zeros for embeddings
-                padding_size = cell_sentence_len - current_batch_size
-                X_pad = torch.zeros((padding_size, X_batch.shape[1]), device=device)
-                X_batch = torch.cat([X_batch, X_pad], dim=0)
-
-                # Pad perturbation tensor with control perturbation
-                pert_pad = torch.zeros((padding_size, pert_batch.shape[1]), device=device)
-                if control_pert in pert_onehot_map:
-                    pert_pad[:] = pert_onehot_map[control_pert].to(device)
-                else:
-                    pert_pad[:, 0] = 1  # Default to first perturbation
-                pert_batch = torch.cat([pert_batch, pert_pad], dim=0)
-
-                # Extend perturbation names
-                pert_names_batch.extend([control_pert] * padding_size)
-
-            # Prepare batch - use same format as working code
-            batch = {
-                "ctrl_cell_emb": X_batch,
-                "pert_emb": pert_batch,  # Keep as 2D tensor
-                "pert_name": pert_names_batch,
-                "batch": torch.zeros((1, cell_sentence_len), device=device),  # Use (1, cell_sentence_len)
-            }
-
-            # Run inference on batch using padded=False like in working code
-            batch_preds = model.predict_step(batch, batch_idx=batch_idx, padded=False)
+            current_batch_size = batch['pert_emb'].shape[0]
+            batch_gpu = {k: (v.to(device, non_blocking=True) if torch.is_tensor(v) else v)
+                     for k, v in batch.items()}
+            batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
+            # print(batch_preds.shape)
+            # print('batch["preds"]',  batch_preds['preds'])
+            print(list(batch.keys()))
+            print('batch["pert_emb"].shape', batch["pert_emb"].shape)
+            print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
+            print('batch["pert_emb"]', batch["pert_emb"])
+            print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
+            print('batch["preds"]', batch_preds['preds'])
 
             # Extract predictions from the dictionary returned by predict_step
             # Use gene decoder output if available, otherwise use latent predictions
@@ -236,20 +380,20 @@ def run_tx_infer(args):
 
             # Only keep predictions for the actual samples (not padding)
             actual_preds = pred_tensor[:current_batch_size]
-            if args.ctrl_pert_option == "replace":
-                # Build a vectorized mask for control perturbations
-                if args.ctrl_pert in pert_onehot_map:
-                    ctrl_vec = pert_onehot_map[args.ctrl_pert].to(pert_batch.device)
-                    mask = (pert_batch[:current_batch_size] == ctrl_vec).all(dim=1)  # shape: [N]
-                else:
-                    # Fallback using names; list->tensor just to create the mask
-                    mask = torch.tensor(
-                        [p == args.ctrl_pert for p in pert_names_batch[:current_batch_size]],
-                        device=actual_preds.device
-                    )
-
-                # Replace rows where mask is True with the corresponding inputs
-                actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
+            # if args.ctrl_pert_option == "replace":
+            #     # Build a vectorized mask for control perturbations
+            #     if args.ctrl_pert in pert_onehot_map:
+            #         ctrl_vec = pert_onehot_map[args.ctrl_pert].to(pert_batch.device)
+            #         mask = (pert_batch[:current_batch_size] == ctrl_vec).all(dim=1)  # shape: [N]
+            #     else:
+            #         # Fallback using names; list->tensor just to create the mask
+            #         mask = torch.tensor(
+            #             [p == args.ctrl_pert for p in pert_names_batch[:current_batch_size]],
+            #             device=actual_preds.device
+            #         )
+            #
+            #     # Replace rows where mask is True with the corresponding inputs
+            #     actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
 
             all_preds.append(actual_preds.cpu().numpy())
 

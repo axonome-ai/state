@@ -362,12 +362,12 @@ def run_tx_infer(args):
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
             # print(batch_preds.shape)
             # print('batch["preds"]',  batch_preds['preds'])
-            print(list(batch.keys()))
-            print('batch["pert_emb"].shape', batch["pert_emb"].shape)
-            print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
-            print('batch["pert_emb"]', batch["pert_emb"])
-            print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
-            print('batch["preds"]', batch_preds['preds'])
+            # print(list(batch.keys()))
+            # print('batch["pert_emb"].shape', batch["pert_emb"].shape)
+            # print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
+            # print('batch["pert_emb"]', batch["pert_emb"])
+            # print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
+            # print('batch["preds"]', batch_preds['preds'])
 
             # Extract predictions from the dictionary returned by predict_step
             # Use gene decoder output if available, otherwise use latent predictions

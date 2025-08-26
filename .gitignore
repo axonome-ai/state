@@ -21,3 +21,5 @@ wandb/
 cell_eval_results/
 
 exploration/
+
+cell_eval_results_bash/

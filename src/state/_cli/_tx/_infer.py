@@ -302,7 +302,7 @@ def run_tx_infer(args):
     # Process in batches with progress bar
     # Use cell_sentence_len as batch size since model expects this
     n_samples = len(pert_names)
-    batch_size = 1 # cell_sentence_len  # Model requires this exact batch size
+    batch_size = cell_sentence_len  # Model requires this exact batch size
     n_batches = (n_samples + batch_size - 1) // batch_size  # Ceiling division
 
     cfg_dir = str(Path(__file__).resolve().parents[2] / "configs")
@@ -323,6 +323,7 @@ def run_tx_infer(args):
     kwargs['pert_col'] = args.pert_col
     kwargs['embed_key'] = args.embed_key
     kwargs['control_pert'] = control_pert
+    kwargs['batch_size'] = batch_size
 
     exp_config = ExperimentConfig(datasets={'replogle_h1': str(Path(args.adata).parent)}, training={},
                                   zeroshot={f'replogle_h1.{Path(args.adata).stem}': 'test'},

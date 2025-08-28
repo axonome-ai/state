@@ -91,6 +91,8 @@ as the perturbed cell are considered.
         pool = self.split_control_pool[split].get(pert_cell_type, None)
 
         # Return None if there is no pool or the pool is empty
+        if perturbed_idx in pool:
+            return perturbed_idx
         if not pool:
             return None
         out = self.rng.choice(pool)

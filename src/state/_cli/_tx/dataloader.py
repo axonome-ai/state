@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 from typing import Literal, Set, Iterator, Iterable
-from torch.utils.data import Dataset, DataLoader, Sampler
+from torch.utils.data import Dataset, DataLoader, Sampler, Subset
 import numpy as np
 import torch
 import logging
@@ -42,6 +42,36 @@ class ListSampler(Sampler[int]):
 
     def __len__(self) -> int:
         return len(self.indices)
+
+def to_subset_dataset(
+    self,
+    split: str,
+    perturbed_indices: np.ndarray,
+    control_indices: np.ndarray,
+) -> Subset:
+    """
+    Creates a Subset of this dataset that includes only the specified perturbed_indices.
+    If `self.should_yield_control_cells` flag is True, the Subset will also yield control cells.
+
+    Args:
+        split: Name of the split to create, one of 'train', 'val', 'test', or 'train_eval'
+        perturbed_indices: Indices of perturbed cells to include
+        control_indices: Indices of control cells to include
+    """
+
+    # sort them for stable ordering
+    perturbed_indices = np.sort(perturbed_indices)
+    control_indices = np.sort(control_indices)
+
+    # Register them in the dataset
+    self._register_split_indices(split, perturbed_indices, control_indices)
+
+    # Return a Subset containing perturbed cells and optionally control cells
+    if self.should_yield_control_cells:
+        all_indices = np.sort(np.concatenate([perturbed_indices, control_indices]))
+        return Subset(self, all_indices)
+    else:
+        return Subset(self, perturbed_indices)
 
 
 class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
@@ -216,7 +246,8 @@ class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
         if celltype in zeroshot_celltypes:
             # Zeroshot: all cells go to specified split
             split = zeroshot_celltypes[celltype]
-            subset = ds.to_subset_dataset(split, pert_indices, ctrl_indices)
+            subset = to_subset_dataset(ds, split, pert_indices, ctrl_indices)
+            # subset = ds.to_subset_dataset(split, pert_indices, ctrl_indices)
 
             if split == "train":
                 self.train_datasets.append(subset)
@@ -238,7 +269,8 @@ class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
 
         elif is_training_dataset:
             # Regular training cell type
-            subset = ds.to_subset_dataset("train", pert_indices, ctrl_indices)
+            subset = to_subset_dataset(ds, "train", pert_indices, ctrl_indices)
+            # subset = ds.to_subset_dataset("train", pert_indices, ctrl_indices)
             self.train_datasets.append(subset)
             counts["train"] = len(subset)
 
@@ -409,21 +441,24 @@ class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
 
             # Create subsets
             if len(val_pert_indices) > 0:
-                subset = ds.to_subset_dataset("val", val_pert_indices, val_ctrl_indices)
+                subset = to_subset_dataset(ds, "val", val_pert_indices, val_ctrl_indices)
+                # subset = ds.to_subset_dataset("val", val_pert_indices, val_ctrl_indices)
                 self.val_datasets.append(subset)
                 counts["val"] = len(subset)
 
             if len(test_pert_indices) > 0:
-                subset = ds.to_subset_dataset(
-                    "test", test_pert_indices, test_ctrl_indices
-                )
+                subset = to_subset_dataset(ds, "test", test_pert_indices, test_ctrl_indices)
+                # subset = ds.to_subset_dataset(
+                #     "test", test_pert_indices, test_ctrl_indices
+                # )
                 self.test_datasets.append(subset)
                 counts["test"] = len(subset)
 
             if len(train_pert_indices) > 0:
-                subset = ds.to_subset_dataset(
-                    "train", train_pert_indices, train_ctrl_indices
-                )
+                subset = to_subset_dataset(ds, "train", train_pert_indices, train_ctrl_indices)
+                # subset = ds.to_subset_dataset(
+                #     "train", train_pert_indices, train_ctrl_indices
+                # )
                 self.train_datasets.append(subset)
                 counts["train"] = len(subset)
 

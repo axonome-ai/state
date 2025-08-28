@@ -326,7 +326,7 @@ def run_tx_infer(args):
     kwargs['batch_size'] = batch_size
 
     exp_config = ExperimentConfig(datasets={'replogle_h1': str(Path(args.adata).parent)}, training={},
-                                  zeroshot={f'replogle_h1.{Path(args.adata).stem}': 'test'},
+                                  zeroshot={f'replogle_h1.{Path(args.adata).stem.split("_")[0]}': 'test'},
                                   fewshot={})
 
     data_module = PerturbationDataModuleFromExperimentConfig(exp_config,
@@ -361,14 +361,15 @@ def run_tx_infer(args):
             batch_gpu = {k: (v.to(device, non_blocking=True) if torch.is_tensor(v) else v)
                      for k, v in batch.items()}
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
-            # print(batch_preds.shape)
-            # print('batch["preds"]',  batch_preds['preds'])
             # print(list(batch.keys()))
             # print('batch["pert_emb"].shape', batch["pert_emb"].shape)
             # print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
+            # print('cell_sentence_len', cell_sentence_len)
+            # print('batch["pert_name"]', batch["pert_name"])
             # print('batch["pert_emb"]', batch["pert_emb"])
             # print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
-            # print('batch["preds"]', batch_preds['preds'])
+            # print('batch["preds"]',  batch_preds['preds'])
+
 
             # Extract predictions from the dictionary returned by predict_step
             # Use gene decoder output if available, otherwise use latent predictions

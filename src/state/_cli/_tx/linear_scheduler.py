@@ -4,12 +4,13 @@ import numpy as np
 from cell_load.mapping_strategies import BaseMappingStrategy, RandomMappingStrategy
 
 
-class LinearRandomMappingStrategy(RandomMappingStrategy):
+class RandomMappingStrategy(BaseMappingStrategy):
+
     """
-    Maps a perturbed cell to random control cell(s) drawn from the same plate.
-    We ensure that only control cells with the same cell type
-    as the perturbed cell are considered.
-    """
+Maps a perturbed cell to random control cell(s) drawn from the same plate.
+We ensure that only control cells with the same cell type
+as the perturbed cell are considered.
+"""
 
     def __init__(self, name="random", random_state=42, n_basal_samples=1, **kwargs):
         super().__init__(name, random_state, n_basal_samples, **kwargs)
@@ -23,9 +24,6 @@ class LinearRandomMappingStrategy(RandomMappingStrategy):
         }
         self.seed = random_state
         self.rng = np.random.default_rng(random_state)
-
-        # Initialize Python's random module with the same seed
-        random.seed(random_state)
 
     def name():
         return "random"

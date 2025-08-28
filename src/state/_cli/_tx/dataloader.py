@@ -8,11 +8,13 @@ from cell_load.config import ExperimentConfig
 from cell_load.data_modules.perturbation_dataloader import PerturbationDataModule
 from cell_load.dataset._metadata import MetadataConcatDataset
 from cell_load.dataset._perturbation import PerturbationDataset
-from cell_load.mapping_strategies.random import RandomMappingStrategy
+# from cell_load.mapping_strategies.random import RandomMappingStrategy
 from cell_load.mapping_strategies.batch import BatchMappingStrategy
 from cell_load.mapping_strategies.first_one import FirstOneMappingStrategy
 from cell_load.utils.data_utils import GlobalH5MetadataCache
 from tqdm import tqdm
+
+from state._cli._tx.linear_scheduler import RandomMappingStrategy
 
 logger = logging.getLogger(__name__)
 
@@ -164,11 +166,11 @@ class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
         collate_fn = partial(PerturbationDataset.collate_fn, int_counts=use_int_counts)
 
         ds = MetadataConcatDataset(datasets)
-        pert_name_cell_type_to_indices = defaultdict(list)
-        for i, d in enumerate(ds):
-            pert_name_cell_type_to_indices[d['pert_name'], d['cell_type']].append(i)
-        indices = sum(pert_name_cell_type_to_indices.values(), [])
-        sampler = ListSampler(indices)
+        # pert_name_cell_type_to_indices = defaultdict(list)
+        # for i, d in enumerate(ds):
+        #     pert_name_cell_type_to_indices[d['pert_name'], d['cell_type']].append(i)
+        # indices = sum(pert_name_cell_type_to_indices.values(), [])
+        # sampler = ListSampler(indices)
         batch_size = batch_size or (1 if test else self.batch_size)
 
         # use_batch = self.basal_mapping_strategy == "batch"
@@ -180,7 +182,7 @@ class PerturbationDataModuleFromExperimentConfig(PerturbationDataModule):
         #     test=test,
         #     use_batch=use_batch,
         # )
-        # sampler = None
+        sampler = None
         batch_sampler = None
         out = DataLoader(
             ds,

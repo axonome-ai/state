@@ -186,6 +186,7 @@ def run_tx_infer(args):
     )
 
     all_preds = []
+    all_gt = []
 
     with torch.no_grad():
         progress_bar = tqdm(total=n_samples, desc="Processing samples", unit="samples")
@@ -249,22 +250,24 @@ def run_tx_infer(args):
 
             # Only keep predictions for the actual samples (not padding)
             actual_preds = pred_tensor[:current_batch_size]
-            if args.ctrl_pert_option == "replace":
-                # Build a vectorized mask for control perturbations
-                if args.ctrl_pert in pert_onehot_map:
-                    ctrl_vec = pert_onehot_map[args.ctrl_pert].to(pert_batch.device)
-                    mask = (pert_batch[:current_batch_size] == ctrl_vec).all(dim=1)  # shape: [N]
-                else:
-                    # Fallback using names; list->tensor just to create the mask
-                    mask = torch.tensor(
-                        [p == args.ctrl_pert for p in pert_names_batch[:current_batch_size]],
-                        device=actual_preds.device
-                    )
+            # if args.ctrl_pert_option == "replace":
+            #     # Build a vectorized mask for control perturbations
+            #     if args.ctrl_pert in pert_onehot_map:
+            #         ctrl_vec = pert_onehot_map[args.ctrl_pert].to(pert_batch.device)
+            #         mask = (pert_batch[:current_batch_size] == ctrl_vec).all(dim=1)  # shape: [N]
+            #     else:
+            #         # Fallback using names; list->tensor just to create the mask
+            #         mask = torch.tensor(
+            #             [p == args.ctrl_pert for p in pert_names_batch[:current_batch_size]],
+            #             device=actual_preds.device
+            #         )
+            #
+            #     # Replace rows where mask is True with the corresponding inputs
+            #     actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
 
-                # Replace rows where mask is True with the corresponding inputs
-                actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
-
+            actual_gt = batch["ctrl_cell_emb"][:current_batch_size].cpu().numpy()
             all_preds.append(actual_preds.cpu().numpy())
+            all_gt.append(actual_gt)
 
             # Update progress bar
             progress_bar.update(current_batch_size)
@@ -276,6 +279,7 @@ def run_tx_infer(args):
 
     # Save predictions to AnnData
     adata.X = preds_np
+    adata.obsm["GT"] = np.concatenate(all_gt, axis=0)
     output_path = args.output or args.adata.replace(".h5ad", "_with_preds.h5ad")
     adata.write_h5ad(output_path)
     logger.info(f"Saved predictions to {output_path} (in adata.X)")

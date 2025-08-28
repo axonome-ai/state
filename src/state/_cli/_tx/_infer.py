@@ -349,26 +349,19 @@ def run_tx_infer(args):
 
         progress_bar = tqdm(total=n_samples, desc="Processing samples", unit="samples")
         for batch_idx, batch in enumerate(dl):
-            # print(list(batch.keys()))
-            # print('batch["pert_emb"].shape', batch["pert_emb"].shape)
-            # print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
-            # print('cell_sentence_len', cell_sentence_len)
-            # print('batch["pert_emb"]', batch["pert_emb"])
-            # print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
-
 
             current_batch_size = batch['pert_emb'].shape[0]
             batch_gpu = {k: (v.to(device, non_blocking=True) if torch.is_tensor(v) else v)
                      for k, v in batch.items()}
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
-            # print(list(batch.keys()))
-            # print('batch["pert_emb"].shape', batch["pert_emb"].shape)
-            # print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
-            # print('cell_sentence_len', cell_sentence_len)
-            # print('batch["pert_name"]', batch["pert_name"])
-            # print('batch["pert_emb"]', batch["pert_emb"])
-            # print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
-            # print('batch["preds"]',  batch_preds['preds'])
+            print(list(batch.keys()))
+            print('batch["pert_emb"].shape', batch["pert_emb"].shape)
+            print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
+            print('cell_sentence_len', cell_sentence_len)
+            print('batch["pert_name"]', batch["pert_name"])
+            print('batch["pert_emb"]', batch["pert_emb"])
+            print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
+            print('batch["preds"]',  batch_preds['preds'])
 
 
             # Extract predictions from the dictionary returned by predict_step

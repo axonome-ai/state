@@ -98,4 +98,5 @@ as the perturbed cell are considered.
         out = self.rng.choice(pool)
         # out = random.choice(pool)
         # Use Python's random.choice to select a single item
+        # print('GET_CONTOL_INDEX', perturbed_idx, out)
         return out

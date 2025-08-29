@@ -312,7 +312,7 @@ def run_tx_infer(args):
 
     kwargs = {**default_cfg['data']['kwargs']}
 
-    kwargs['num_workers'] = 8
+    kwargs['num_workers'] = 1
     kwargs['batch_col'] = "batch_var"
     kwargs['pert_col'] = "target_gene"
     kwargs['cell_type_key'] = "cell_type"
@@ -343,6 +343,7 @@ def run_tx_infer(args):
     )
 
     all_preds = []
+    all_gt = []
 
     with torch.no_grad():
         device = torch.device("cuda", 0)
@@ -354,14 +355,16 @@ def run_tx_infer(args):
             batch_gpu = {k: (v.to(device, non_blocking=True) if torch.is_tensor(v) else v)
                      for k, v in batch.items()}
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
-            print(list(batch.keys()))
-            print('batch["pert_emb"].shape', batch["pert_emb"].shape)
-            print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
-            print('cell_sentence_len', cell_sentence_len)
-            print('batch["pert_name"]', batch["pert_name"])
-            print('batch["pert_emb"]', batch["pert_emb"])
-            print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
-            print('batch["preds"]',  batch_preds['preds'])
+            if batch_idx == 39:
+                print(list(batch.keys()))
+                print('batch["pert_emb"].shape', batch["pert_emb"].shape)
+                print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
+                print('cell_sentence_len', cell_sentence_len)
+                print('batch["pert_name"]', batch["pert_name"])
+                print('batch["pert_emb"]', batch["pert_emb"])
+                print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
+                print('batch["preds"]',  batch_preds['preds'])
+                print()
 
 
             # Extract predictions from the dictionary returned by predict_step
@@ -391,6 +394,7 @@ def run_tx_infer(args):
             #     actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
 
             all_preds.append(actual_preds.cpu().numpy())
+            all_gt.append(batch["ctrl_cell_emb"].cpu().numpy())
 
             # Update progress bar
             progress_bar.update(current_batch_size)
@@ -402,6 +406,7 @@ def run_tx_infer(args):
 
     # Save predictions to AnnData
     adata.X = preds_np
+    adata.obsm['GT'] = np.concatenate(all_gt, axis=0)
     output_path = args.output or args.adata.replace(".h5ad", "_with_preds.h5ad")
     adata.write_h5ad(output_path)
     logger.info(f"Saved predictions to {output_path} (in adata.X)")

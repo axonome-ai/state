@@ -77,11 +77,10 @@ def run_tx_infer(args):
         checkpoint_path = str(final_checkpoint_path)
         logger.info(f"No checkpoint provided, reverting to default: {checkpoint_path}")
     if not Path(checkpoint_path).exists():
+        logger.info(f'Failed to find {checkpoint_path}, looking in model dir.')
+        checkpoint_path = checkpoint_dir / checkpoint_path
         if not Path(checkpoint_path).exists():
-            logger.info(f'Failed to find {checkpoint_path}, looking in model dir.')
-            checkpoint_path = checkpoint_dir / checkpoint_path
-            if not Path(checkpoint_path).exists():
-                raise FileNotFoundError(checkpoint_path)
+            raise FileNotFoundError(checkpoint_path)
 
     # Get perturbation dimensions and mapping from data module
     var_dims_path = os.path.join(args.model_dir, "var_dims.pkl")

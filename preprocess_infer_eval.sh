@@ -4,12 +4,12 @@ set -euo pipefail
 # Prefer local src/ first
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
 
-# ADATA="/home/hackerman/Github/state/competition_support_set/hepg2.h5"
-ADATA="/home/hackerman/Github/state/filtered_set/hepg2_filtered.h5"
+ ADATA="/home/hackerman/Github/state/competition_support_set/hepg2.h5"
+# ADATA="/home/hackerman/Github/state/filtered_set/hepg2_filtered.h5"
 #MODEL_DIR="/home/hackerman/Github/axonome-state/competition/2025-07-28T18:55:06.027430/"
 MODEL_DIR="/home/hackerman/Downloads/hepg2_overfit/"
 CHECKPOINT="step=40000.ckpt"
-EVAL_DIR="./cell_eval_results_filt"
+EVAL_DIR="./cell_eval_results/all_hepg2"
 
 
 # ---- stems via Bash parameter expansion (no Python subprocess) ----
@@ -64,17 +64,19 @@ if [[ "$prepro" == "true" ]]; then
 else
   echo "RUNNING WITHOUT PREPROCESSING"
   PREPRO_PATH=$ADATA
-  OUTPUT_PATH="${OUT_DIR_BASE}/${MODEL_NAME}_${DATA_STEM}_dataloader.h5ad"
+
+  NAME="${MODEL_NAME}_${DATA_STEM}_dataloader_replace"
+  OUTPUT_PATH="${OUT_DIR_BASE}/${NAME}.h5ad"
   python -m state tx infer \
     --adata="$PREPRO_PATH" \
     --output="$OUTPUT_PATH" \
     --model_dir="$MODEL_DIR" \
     --checkpoint=$CHECKPOINT \
     --pert_col="target_gene" \
-    --ctrl_pert="non-targeting"
+    --ctrl_pert="non-targeting" \
+    --ctrl_pert_option="replace"
 
-  # OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${MODEL_NAME}_${DATA_STEM}_s${SEED}"
-  OUTPUT_DIR="${EVAL_DIR}/cell-eval-${MODEL_NAME}_${DATA_STEM}"
+  OUTPUT_DIR="${EVAL_DIR}/cell-eval-${NAME}"
   mkdir -p "$OUTPUT_DIR"
 
   python -m cell_eval run \

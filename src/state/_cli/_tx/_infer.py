@@ -369,17 +369,6 @@ def run_tx_infer(args):
 
 
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
-            if batch_idx == 39:
-                print(list(batch.keys()))
-                print('batch["pert_emb"].shape', batch["pert_emb"].shape)
-                print('batch["ctrl_cell_emb"].shape', batch["ctrl_cell_emb"].shape)
-                print('cell_sentence_len', cell_sentence_len)
-                print('batch["pert_name"]', batch["pert_name"])
-                print('batch["pert_emb"]', batch["pert_emb"])
-                print('batch["ctrl_cell_emb"]', batch["ctrl_cell_emb"])
-                print('batch["preds"]',  batch_preds['preds'])
-                print()
-
 
             # Extract predictions from the dictionary returned by predict_step
             # Use gene decoder output if available, otherwise use latent predictions
@@ -394,7 +383,9 @@ def run_tx_infer(args):
             actual_preds = pred_tensor[:current_batch_size]
             if args.ctrl_pert_option == "replace":
                 mask = torch.tensor([n == control_pert for n in batch["pert_name"][:current_batch_size]], dtype=torch.bool).to(device)
-                actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds[:current_batch_size])
+                actual_preds = torch.where(mask.unsqueeze(1),
+                                           batch_gpu['ctrl_cell_emb'][:current_batch_size],
+                                           actual_preds[:current_batch_size])
 
             all_preds.append(actual_preds.cpu().numpy())
             # all_gt.append(batch["ctrl_cell_emb"].cpu().numpy())

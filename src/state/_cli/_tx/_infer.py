@@ -222,13 +222,6 @@ def run_tx_infer(args):
     adata = sc.read_h5ad(args.adata)
 
     # Optionally filter by cell type
-    # if args.ctrl_pert_option == 'skip':
-    #     if args.pert_col not in adata.obs:
-    #         raise ValueError(f"Column '{args.pert_col}' not found in adata.obs.")
-    #     initial_n = adata.n_obs
-    #     adata = adata[adata.obs[args.pert_col] != args.ctrl_pert].copy()
-    #     logger.info(f"Filtered AnnData to {adata.n_obs} cells excluding control type {args.ctrl_pert} (from {initial_n} cells)")
-
     if args.celltype_col is not None and args.celltypes is not None:
         celltypes = [ct.strip() for ct in args.celltypes.split(",")]
         if args.celltype_col not in adata.obs:
@@ -343,7 +336,7 @@ def run_tx_infer(args):
     )
 
     all_preds = []
-    all_gt = []
+    # all_gt = []
 
     with torch.no_grad():
         device = torch.device("cuda", 0)
@@ -399,23 +392,12 @@ def run_tx_infer(args):
 
             # Only keep predictions for the actual samples (not padding)
             actual_preds = pred_tensor[:current_batch_size]
-            # if args.ctrl_pert_option == "replace":
-            #     # Build a vectorized mask for control perturbations
-            #     if args.ctrl_pert in pert_onehot_map:
-            #         ctrl_vec = pert_onehot_map[args.ctrl_pert].to(pert_batch.device)
-            #         mask = (pert_batch[:current_batch_size] == ctrl_vec).all(dim=1)  # shape: [N]
-            #     else:
-            #         # Fallback using names; list->tensor just to create the mask
-            #         mask = torch.tensor(
-            #             [p == args.ctrl_pert for p in pert_names_batch[:current_batch_size]],
-            #             device=actual_preds.device
-            #         )
-            #
-            #     # Replace rows where mask is True with the corresponding inputs
-            #     actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds)
+            if args.ctrl_pert_option == "replace":
+                mask = torch.tensor([n == control_pert for n in batch["pert_name"][:current_batch_size]], dtype=torch.bool).to(device)
+                actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds[:current_batch_size])
 
             all_preds.append(actual_preds.cpu().numpy())
-            all_gt.append(batch["ctrl_cell_emb"].cpu().numpy())
+            # all_gt.append(batch["ctrl_cell_emb"].cpu().numpy())
 
             # Update progress bar
             progress_bar.update(current_batch_size)
@@ -427,7 +409,7 @@ def run_tx_infer(args):
 
     # Save predictions to AnnData
     adata.X = preds_np
-    adata.obsm['GT'] = np.concatenate(all_gt, axis=0)
+    # adata.obsm['GT'] = np.concatenate(all_gt, axis=0)
     output_path = args.output or args.adata.replace(".h5ad", "_with_preds.h5ad")
     adata.write_h5ad(output_path)
     logger.info(f"Saved predictions to {output_path} (in adata.X)")

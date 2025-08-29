@@ -4,10 +4,12 @@ set -euo pipefail
 # Prefer local src/ first
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
 
-ADATA="/home/hackerman/Github/state/competition_support_set/hepg2.h5"
+# ADATA="/home/hackerman/Github/state/competition_support_set/hepg2.h5"
+ADATA="/home/hackerman/Github/state/filtered_set/hepg2_filtered.h5"
 #MODEL_DIR="/home/hackerman/Github/axonome-state/competition/2025-07-28T18:55:06.027430/"
 MODEL_DIR="/home/hackerman/Downloads/hepg2_overfit/"
 CHECKPOINT="step=40000.ckpt"
+EVAL_DIR="./cell_eval_results_filt"
 
 
 # ---- stems via Bash parameter expansion (no Python subprocess) ----
@@ -26,21 +28,13 @@ mkdir -p "$PREPRO_DIR" "$OUT_DIR_BASE"
 # Seeds to test; adjust as needed
 #SEEDS=(42 1 2 3 4)
 # for SEED in "${SEEDS[@]}"; do
-# echo "=== Running with seed ${SEED} ==="
-
-# PREPRO_PATH="${PREpro_DIR:-$PREPRO_DIR}/${DATA_STEM}_preprocessed2_s${SEED}.h5"
-#python -m state tx preprocess_infer \
-#  --adata="$ADATA" \
-#  --output="$PREPRO_PATH" \
-#  --control_condition="non-targeting" \
-#  --pert_col="target_gene" \
-#  --seed="$SEED"
-# OUTPUT_PATH="${OUT_DIR_BASE//${MODEL_NAME}_${DATA_STEM}_s${SEED}.h5ad"
 
 SEED=42
-prepro=true  # or "false"
+prepro=false  # or "false"
 
+echo "=== Running with seed ${SEED} ==="
 if [[ "$prepro" == "true" ]]; then
+  echo "RUNNING WITH PREPROCESSING"
   PREPRO_PATH="${PREpro_DIR:-$PREPRO_DIR}/${DATA_STEM}_preprocessed2_s${SEED}.h5"
   python -m state tx preprocess_infer \
     --adata="$ADATA" \
@@ -58,7 +52,7 @@ if [[ "$prepro" == "true" ]]; then
   --pert_col="target_gene" \
   --ctrl_pert="non-targeting"
 
-  OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${NAME}"
+  OUTPUT_DIR="${EVAL_DIR}/cell-eval-${NAME}"
   mkdir -p "$OUTPUT_DIR"
 
   python -m cell_eval run \
@@ -68,8 +62,9 @@ if [[ "$prepro" == "true" ]]; then
     --num-threads=12 \
     --outdir="$OUTPUT_DIR"
 else
+  echo "RUNNING WITHOUT PREPROCESSING"
   PREPRO_PATH=$ADATA
-  OUTPUT_PATH="${OUT_DIR_BASE}/${MODEL_NAME}_${DATA_STEM}.h5ad"
+  OUTPUT_PATH="${OUT_DIR_BASE}/${MODEL_NAME}_${DATA_STEM}_dataloader.h5ad"
   python -m state tx infer \
     --adata="$PREPRO_PATH" \
     --output="$OUTPUT_PATH" \
@@ -79,7 +74,7 @@ else
     --ctrl_pert="non-targeting"
 
   # OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${MODEL_NAME}_${DATA_STEM}_s${SEED}"
-  OUTPUT_DIR="./cell_eval_results_bash/cell-eval-${MODEL_NAME}_${DATA_STEM}"
+  OUTPUT_DIR="${EVAL_DIR}/cell-eval-${MODEL_NAME}_${DATA_STEM}"
   mkdir -p "$OUTPUT_DIR"
 
   python -m cell_eval run \

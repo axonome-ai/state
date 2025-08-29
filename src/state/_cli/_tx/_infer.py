@@ -354,6 +354,22 @@ def run_tx_infer(args):
             current_batch_size = batch['pert_emb'].shape[0]
             batch_gpu = {k: (v.to(device, non_blocking=True) if torch.is_tensor(v) else v)
                      for k, v in batch.items()}
+
+            if current_batch_size < cell_sentence_len:
+                # Pad with zeros for embeddings
+                padding_size = cell_sentence_len - current_batch_size
+                X_pad = torch.zeros((padding_size, X_batch.shape[1]), device=device)
+                X_batch = torch.cat([X_batch, X_pad], dim=0)
+
+                # Pad perturbation tensor with control perturbation
+                pert_pad = torch.zeros((padding_size, pert_batch.shape[1]), device=device)
+                if control_pert in pert_onehot_map:
+                    pert_pad[:] = pert_onehot_map[control_pert].to(device)
+                else:
+                    pert_pad[:, 0] = 1  # Default to first perturbation
+                pert_batch = torch.cat([pert_batch, pert_pad], dim=0)
+
+
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)
             if batch_idx == 39:
                 print(list(batch.keys()))

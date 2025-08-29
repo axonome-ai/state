@@ -101,12 +101,6 @@ def run_tx_infer(args):
     adata = sc.read_h5ad(args.adata)
 
     # Optionally filter by cell type
-    # if args.ctrl_pert_option == 'skip':
-    #     if args.pert_col not in adata.obs:
-    #         raise ValueError(f"Column '{args.pert_col}' not found in adata.obs.")
-    #     initial_n = adata.n_obs
-    #     adata = adata[adata.obs[args.pert_col] != args.ctrl_pert].copy()
-    #     logger.info(f"Filtered AnnData to {adata.n_obs} cells excluding control type {args.ctrl_pert} (from {initial_n} cells)")
     if args.celltype_col is not None and args.celltypes is not None:
         celltypes = [ct.strip() for ct in args.celltypes.split(",")]
         if args.celltype_col not in adata.obs:
@@ -186,7 +180,7 @@ def run_tx_infer(args):
     )
 
     all_preds = []
-    all_gt = []
+    # all_gt = []
 
     with torch.no_grad():
         progress_bar = tqdm(total=n_samples, desc="Processing samples", unit="samples")
@@ -246,9 +240,9 @@ def run_tx_infer(args):
                 mask = torch.tensor([n == control_pert for n in pert_names_batch[:current_batch_size]], dtype=torch.bool).to(device)
                 actual_preds = torch.where(mask.unsqueeze(1), X_batch[:current_batch_size], actual_preds[:current_batch_size])
 
-            actual_gt = batch["ctrl_cell_emb"][:current_batch_size].cpu().numpy()
             all_preds.append(actual_preds.cpu().numpy())
-            all_gt.append(actual_gt)
+            # actual_gt = batch["ctrl_cell_emb"][:current_batch_size].cpu().numpy()
+            # all_gt.append(actual_gt)
 
             # Update progress bar
             progress_bar.update(current_batch_size)
@@ -260,7 +254,7 @@ def run_tx_infer(args):
 
     # Save predictions to AnnData
     adata.X = preds_np
-    adata.obsm["GT"] = np.concatenate(all_gt, axis=0)
+    # adata.obsm["GT"] = np.concatenate(all_gt, axis=0)
     output_path = args.output or args.adata.replace(".h5ad", "_with_preds.h5ad")
     adata.write_h5ad(output_path)
     logger.info(f"Saved predictions to {output_path} (in adata.X)")

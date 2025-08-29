@@ -357,6 +357,8 @@ def run_tx_infer(args):
 
             if current_batch_size < cell_sentence_len:
                 # Pad with zeros for embeddings
+                X_batch = batch_gpu['ctrl_cell_emb']
+                pert_batch = batch_gpu['pert_emb']
                 padding_size = cell_sentence_len - current_batch_size
                 X_pad = torch.zeros((padding_size, X_batch.shape[1]), device=device)
                 X_batch = torch.cat([X_batch, X_pad], dim=0)
@@ -368,6 +370,9 @@ def run_tx_infer(args):
                 else:
                     pert_pad[:, 0] = 1  # Default to first perturbation
                 pert_batch = torch.cat([pert_batch, pert_pad], dim=0)
+                batch_gpu['ctrl_cell_emb'] = X_batch
+                batch_gpu['pert_emb'] = pert_batch
+                batch_gpu["batch"]: torch.zeros((1, cell_sentence_len), device=device)
 
 
             batch_preds = model.predict_step(batch_gpu, batch_idx=batch_idx, padded=False)

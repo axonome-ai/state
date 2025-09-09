@@ -12,6 +12,7 @@ from geomloss import SamplesLoss
 from typing import Tuple
 
 from .base import PerturbationModel
+from ...emb.nn.loss import WassersteinLoss, KLDivergenceLoss, MMDLoss, TabularLoss
 from .decoders import FinetuneVCICountsDecoder
 from .decoders_nb import NBDecoder, nb_nll
 from .utils import build_mlp, get_activation_class, get_transformer_backbone
@@ -129,7 +130,16 @@ class StateTransitionPerturbationModel(PerturbationModel):
             pert_dim: dimension of perturbation embedding.
             gpt: e.g. "TranslationTransformerSamplesModel".
             model_kwargs: dictionary passed to that model's constructor.
-            loss: choice of distributional metric ("sinkhorn", "energy", etc.).
+            loss: choice of loss function. Available options:
+                - "energy": Energy distance (default)
+                - "mse": Mean Squared Error
+                - "se": Combined Sinkhorn + Energy loss
+                - "sinkhorn": Sinkhorn loss
+                - "cross_entropy": Binary Cross Entropy with Logits
+                - "wasserstein": Wasserstein distance
+                - "kl_divergence": KL Divergence (with optional normalization)
+                - "mmd": Maximum Mean Discrepancy
+                - "tabular": Tabular loss (gene + cell level)
             **kwargs: anything else to pass up to PerturbationModel or not used.
         """
         # Call the parent PerturbationModel constructor
@@ -156,7 +166,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         self.detach_decoder = kwargs.get("detach_decoder", False)
 
         self.transformer_backbone_key = transformer_backbone_key
-        self.transformer_backbone_kwargs = transformer_backbone_kwargs
+        self.transformer_backbone_kwargs = transformer_backbone_kwargs or {}
         self.transformer_backbone_kwargs["n_positions"] = self.cell_sentence_len + kwargs.get("extra_tokens", 0)
 
         self.distributional_loss = distributional_loss
@@ -179,6 +189,21 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.loss_fn = CombinedLoss(sinkhorn_weight=sinkhorn_weight, energy_weight=energy_weight, blur=blur)
         elif loss_name == "sinkhorn":
             self.loss_fn = SamplesLoss(loss="sinkhorn", blur=blur)
+        elif loss_name == "cross_entropy":
+            self.loss_fn = nn.BCEWithLogitsLoss()
+        elif loss_name == "wasserstein":
+            self.loss_fn = WassersteinLoss()
+        elif loss_name == "kl_divergence":
+            apply_normalization = kwargs.get("apply_normalization", False)
+            self.loss_fn = KLDivergenceLoss(apply_normalization=apply_normalization)
+        elif loss_name == "mmd":
+            kernel = kwargs.get("kernel", "energy")
+            downsample = kwargs.get("num_downsample", 1) if self.training else 1
+            self.loss_fn = MMDLoss(kernel=kernel, downsample=downsample)
+        elif loss_name == "tabular":
+            shared = kwargs.get("shared", 128)  # or get from dataset config
+            downsample = kwargs.get("num_downsample", 1) if self.training else 1
+            self.loss_fn = TabularLoss(shared=shared, downsample=downsample)
         else:
             raise ValueError(f"Unknown loss function: {loss_name}")
 

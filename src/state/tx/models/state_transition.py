@@ -29,7 +29,7 @@ class CombinedLoss(nn.Module):
         self.energy_weight = energy_weight
         self.sinkhorn_loss = SamplesLoss(loss="sinkhorn", blur=blur)
         self.energy_loss = SamplesLoss(loss="energy", blur=blur)
-    
+
     def forward(self, pred, target):
         sinkhorn_val = self.sinkhorn_loss(pred, target)
         energy_val = self.energy_loss(pred, target)
@@ -441,7 +441,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
         main_loss = self.loss_fn(pred, target).nanmean()
         self.log("train_loss", main_loss)
-        
+
         # Log individual loss components if using combined loss
         if hasattr(self.loss_fn, 'sinkhorn_loss') and hasattr(self.loss_fn, 'energy_loss'):
             sinkhorn_component = self.loss_fn.sinkhorn_loss(pred, target).nanmean()
@@ -535,7 +535,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
         loss = self.loss_fn(pred, target).mean()
         self.log("val_loss", loss)
-        
+
         # Log individual loss components if using combined loss
         if hasattr(self.loss_fn, 'sinkhorn_loss') and hasattr(self.loss_fn, 'energy_loss'):
             sinkhorn_component = self.loss_fn.sinkhorn_loss(pred, target).mean()
@@ -685,9 +685,18 @@ class StateTransitionPerturbationModel(PerturbationModel):
             cache["batch"].extend([str(x) for x in items])
 
         # ----- gene counts for DE metric -----
-        if gene_targets is not None and pert_cell_counts_preds is not None:
-            cache["counts_pred"].append(pert_cell_counts_preds.detach().cpu())
-            cache["counts_real"].append(gene_targets.detach().cpu())
+        if self._compute_de and self.gene_decoder is not None and "pert_cell_counts" in batch:
+            # recompute gene predictions from emb_pred
+            if isinstance(self.gene_decoder, NBDecoder):
+                mu, _ = self.gene_decoder(emb_pred)
+                counts_pred = mu
+            else:
+                counts_pred = self.gene_decoder(emb_pred)
+
+            counts_true = batch["pert_cell_counts"]
+
+            cache["counts_pred"].append(counts_pred.detach().cpu())
+            cache["counts_real"].append(counts_true.detach().cpu())
 
     def on_validation_epoch_start(self) -> None:
         """
@@ -748,25 +757,27 @@ class StateTransitionPerturbationModel(PerturbationModel):
             # ------------------------------------------------------------------
             # Build AnnData objects
             # ------------------------------------------------------------------
-
-            if self._compute_de and self.gene_decoder is not None and "pert_cell_counts" in batch:
-                pred = torch.cat(cache["counts_pred"]).numpy()
-                real = torch.cat(cache["counts_real"]).numpy()
+            pred_emb = torch.cat(cache["emb_pred"]).numpy()
+            real_emb = torch.cat(cache["emb_real"]).numpy()
+            using_counts = self.gene_decoder is not None
+            if using_counts:
+                pred_count = torch.cat(cache["counts_pred"]).numpy()
+                real_count = torch.cat(cache["counts_real"]).numpy()
             else:
-                pred = torch.cat(cache["emb_pred"]).numpy()
-                real = torch.cat(cache["emb_real"]).numpy()
+                pred_count = pred_emb
+                real_count = real_emb
 
             ad_pred = build_anndata(
-                x_matrix=pred,
-                embeddings=real,
+                x_matrix=pred_count,
+                embeddings=pred_emb,
                 perturbations=cache["pert"],
                 cell_types=cache["ctype"],
                 pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
                 batches=cache["batch"],
             )
             ad_real = build_anndata(
-                x_matrix=pred,
-                embeddings=real,
+                x_matrix=real_count,
+                embeddings=real_emb,
                 perturbations=cache["pert"],
                 cell_types=cache["ctype"],
                 pert_col_name=cfg["validation"]["perturbation"]["pert_col"],
@@ -789,14 +800,26 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 pert_col=cfg["validation"]["perturbation"]["pert_col"],
                 outdir='/tmp/random_dir/',
                 batch_size=2**12,  # found to be the fastest
+
             )
             evaluator.outdir = None
 
+            metrics_config = None
+            if not using_counts:
+                metrics_config = {
+                    "discrimination_score": {
+                        "embed_key": "X_emb",
+                    },
+                    "pearson_edistance": {
+                        "embed_key": "X_emb",
+                    }
+                }
 
             _, agg_result = evaluator.compute(
                 profile="vcc",
                 skip_metrics=skip_metrics,
                 write_csv=False,
+                metric_configs=metrics_config
             )
 
             # ------------------------------------------------------------------

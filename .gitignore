@@ -17,3 +17,10 @@ notebooks/
 competition/
 
 wandb/
+
+cell_eval_results/
+
+exploration/
+
+cell_eval_results_bash/
+cell_eval_results_filt/

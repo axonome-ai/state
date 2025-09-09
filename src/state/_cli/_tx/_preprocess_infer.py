@@ -88,7 +88,6 @@ def run_tx_preprocess_infer(
         # Categorical column
         unique_perturbations = adata.obs[pert_col].cat.categories
     else:
-        # Regular column
         unique_perturbations = adata.obs[pert_col].unique()
     
     non_control_perturbations = [p for p in unique_perturbations if p != control_condition]
@@ -98,6 +97,7 @@ def run_tx_preprocess_infer(
     logger.info("This creates a 'control template' where state_transition inference will apply perturbation effects")
     
     total_replaced_cells = 0
+    rng = np.random.default_rng(seed=seed)
     
     # For each non-control perturbation, replace with randomly sampled control cells
     for i, perturbation in enumerate(non_control_perturbations):
@@ -108,7 +108,7 @@ def run_tx_preprocess_infer(
         
         if n_pert_cells > 0:
             # Sample n_pert_cells control cells randomly (with replacement)
-            sampled_control_indices = np.random.choice(control_indices, size=n_pert_cells, replace=True)
+            sampled_control_indices = rng.choice(control_indices, size=n_pert_cells, replace=True)
             
             # Replace the expression data
             adata_modified.X[pert_indices] = adata.X[sampled_control_indices]

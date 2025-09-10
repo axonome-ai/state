@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union, Any
 
 import torch
 import torch.nn as nn
@@ -8,6 +8,7 @@ from lightning.pytorch import LightningModule
 import typing as tp
 
 from .utils import get_loss_fn
+from .simple_lr_policies import create_lr_policy, should_use_scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +138,7 @@ class PerturbationModel(ABC, LightningModule):
         hidden_dim: int,
         output_dim: int,
         pert_dim: int,
-        batch_dim: int = None,
+        batch_dim: Optional[int] = None,
         dropout: float = 0.1,
         lr: float = 3e-4,
         loss_fn: nn.Module = nn.MSELoss(),
@@ -149,6 +150,7 @@ class PerturbationModel(ABC, LightningModule):
         gene_dim: int = 5000,
         hvg_dim: int = 2001,
         decoder_cfg: dict | None = None,
+        lr_scheduler: Optional[str] = "none",
         **kwargs,
     ):
         super().__init__()
@@ -182,6 +184,13 @@ class PerturbationModel(ABC, LightningModule):
         self.dropout = dropout
         self.lr = lr
         self.loss_fn = get_loss_fn(loss_fn)
+        
+        # Initialize learning rate scheduler
+        self.lr_scheduler = lr_scheduler
+        self.lr_policy = None
+        if should_use_scheduler(self.lr_scheduler):
+            self.lr_policy = create_lr_policy(self.lr_scheduler, **kwargs)
+        
         self._build_decoder()
 
     def transfer_batch_to_device(self, batch, device, dataloader_idx: int):
@@ -283,7 +292,7 @@ class PerturbationModel(ABC, LightningModule):
 
         return total_loss
 
-    def validation_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> None:
+    def validation_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> Dict[str, torch.Tensor]:
         """Validation step logic."""
         pred = self(batch)
         loss = self.loss_fn(pred, batch["pert_cell_emb"])
@@ -339,7 +348,7 @@ class PerturbationModel(ABC, LightningModule):
 
         return output_dict
 
-    def decode_to_gene_space(self, latent_embeds: torch.Tensor, basal_expr: None) -> torch.Tensor:
+    def decode_to_gene_space(self, latent_embeds: torch.Tensor, basal_expr: Optional[torch.Tensor] = None) -> Optional[torch.Tensor]:
         """
         Decode latent embeddings to gene expression space.
 
@@ -357,10 +366,28 @@ class PerturbationModel(ABC, LightningModule):
             return pert_cell_counts_preds
         return None
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> "OptimizerLRScheduler":
         """
-        Configure a single optimizer for both the main model and the gene decoder.
+        Configure optimizer and learning rate scheduler based on the learning rate policy.
         """
-        # Use a single optimizer for all parameters
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
-        return optimizer
+        # Create optimizer
+        optimizer = torch.optim.AdamW(
+            self.parameters(),
+            lr=self.lr,
+            weight_decay=getattr(self, 'weight_decay', 0.01)
+        )
+        
+        # If no learning rate policy is configured, return just the optimizer
+        if self.lr_policy is None:
+            return optimizer
+        
+        # Get total training steps
+        total_steps = int(self.trainer.estimated_stepping_batches) if self.trainer else 10000
+        
+        # Create scheduler from the learning rate policy
+        scheduler_config = self.lr_policy.get_scheduler(optimizer, total_steps)
+        
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": scheduler_config
+        }

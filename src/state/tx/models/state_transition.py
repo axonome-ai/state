@@ -1,6 +1,6 @@
 import logging
 import polars as pl
-from typing import Dict, Optional
+from typing import Dict, Optional, Union, Any
 
 import anndata as ad
 import numpy as np
@@ -17,6 +17,7 @@ from .decoders import FinetuneVCICountsDecoder
 from .decoders_nb import NBDecoder, nb_nll
 from .utils import build_mlp, get_activation_class, get_transformer_backbone
 from ..utils.metric_utils import build_anndata, calculate_overall_score
+from .simple_lr_policies import SimpleLearningRatePolicy, create_lr_policy, should_use_scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -120,6 +121,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         transformer_backbone_kwargs: dict = None,
         output_space: str = "gene",
         gene_dim: Optional[int] = None,
+        lr_scheduler: Optional[str] = None,
         **kwargs,
     ):
         """
@@ -175,6 +177,12 @@ class StateTransitionPerturbationModel(PerturbationModel):
         self.cfg = kwargs
         self._last_val_perturbation_check = 0
         self._last_val_de_check = 0
+        
+        # Initialize learning rate scheduler
+        self.lr_scheduler = lr_scheduler
+        self.lr_policy = None
+        if should_use_scheduler(self.lr_scheduler):
+            self.lr_policy = create_lr_policy(self.lr_scheduler, **kwargs)
 
         # Build the distributional loss from geomloss
         blur = kwargs.get("blur", 0.05)
@@ -285,6 +293,32 @@ class StateTransitionPerturbationModel(PerturbationModel):
             )
 
         print(self)
+    
+    def configure_optimizers(self):
+        """
+        Configure optimizer and learning rate scheduler based on the learning rate policy.
+        """
+        # Create optimizer
+        optimizer = torch.optim.AdamW(
+            self.parameters(),
+            lr=self.lr,
+            weight_decay=self.cfg.get("weight_decay", 0.01)
+        )
+        
+        # If no learning rate policy is configured, return just the optimizer
+        if self.lr_policy is None:
+            return optimizer
+        
+        # Get total training steps
+        total_steps = int(self.trainer.estimated_stepping_batches) if self.trainer else 10000
+        
+        # Create scheduler from the learning rate policy
+        scheduler_config = self.lr_policy.get_scheduler(optimizer, total_steps)
+        
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": scheduler_config
+        }
 
     def _build_networks(self):
         """
@@ -466,6 +500,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
         main_loss = self.loss_fn(pred, target).nanmean()
         self.log("train_loss", main_loss)
+        
+        # Log learning rate
+        current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
+        self.log("train/lr", current_lr, on_step=True, on_epoch=False)
 
         # Log individual loss components if using combined loss
         if hasattr(self.loss_fn, 'sinkhorn_loss') and hasattr(self.loss_fn, 'energy_loss'):

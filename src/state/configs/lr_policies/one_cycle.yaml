@@ -1,0 +1,11 @@
+# OneCycle Learning Rate Policy
+# This policy implements the 1cycle learning rate schedule which can lead to
+# faster convergence and better generalization.
+
+name: one_cycle
+max_lr: 1e-4
+total_steps: null  # Will use total training steps if null
+pct_start: 0.3
+anneal_strategy: cos
+div_factor: 25.0
+final_div_factor: 10000.0

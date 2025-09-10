@@ -1,0 +1,13 @@
+# Reduce on Plateau Learning Rate Policy
+# This policy reduces the learning rate when the validation loss plateaus,
+# which can help with fine-tuning and avoiding overfitting.
+
+name: reduce_on_plateau
+max_lr: 1e-4
+min_lr: 1e-6
+warmup_steps: 1000
+mode: min
+factor: 0.5
+patience: 10
+threshold: 1e-4
+cooldown: 0

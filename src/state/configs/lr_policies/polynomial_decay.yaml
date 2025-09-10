@@ -1,0 +1,9 @@
+# Polynomial Decay Learning Rate Policy
+# This policy implements polynomial decay which can be effective for
+# long training runs.
+
+name: polynomial_decay
+max_lr: 1e-4
+min_lr: 1e-6
+warmup_steps: 1000
+power: 1.0

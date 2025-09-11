@@ -1,0 +1,13 @@
+experiment:
+  lr_early_stopping:
+    check_frequency: 50
+    enabled: true
+    min_lr: 1.0e-08
+    patience: 10
+    verbose: true
+  name: embedding_training_with_lr_early_stopping
+  num_epochs: 100
+  val_check_interval: 0.5
+model: {}
+optimizer:
+  max_lr: 0.001

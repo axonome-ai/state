@@ -198,7 +198,22 @@ def run_tx_train(cfg: DictConfig):
     )
     # Add BatchSpeedMonitorCallback to log batches per second to wandb
     batch_speed_monitor = BatchSpeedMonitorCallback()
+    
+    # Add LearningRateEarlyStopping callback if configured
+    lr_early_stopping = None
+    if cfg["training"].get("lr_early_stopping", {}).get("enabled", False):
+        from ..tx.callbacks import LearningRateEarlyStopping
+        lr_early_stopping = LearningRateEarlyStopping(
+            min_lr=cfg["training"]["lr_early_stopping"].get("min_lr", 1e-7),
+            patience=cfg["training"]["lr_early_stopping"].get("patience", 0),
+            verbose=cfg["training"]["lr_early_stopping"].get("verbose", True),
+            check_frequency=cfg["training"]["lr_early_stopping"].get("check_frequency", 1),
+        )
+        logger.info(f"Learning rate early stopping enabled with min_lr={lr_early_stopping.min_lr}")
+    
     callbacks = ckpt_callbacks + [batch_speed_monitor]
+    if lr_early_stopping:
+        callbacks.append(lr_early_stopping)
 
     logger.info("Loggers and callbacks set up.")
 

@@ -124,6 +124,18 @@ def main(cfg):
 
     callbacks = [checkpoint_callback, LogLR(100), ResumeCallback(cfg), PerfProfilerCallback()]
 
+    # Add LearningRateEarlyStopping callback if configured
+    if getattr(cfg.experiment, "lr_early_stopping", {}).get("enabled", False):
+        from ...tx.callbacks import LearningRateEarlyStopping
+        lr_early_stopping = LearningRateEarlyStopping(
+            min_lr=cfg.experiment.lr_early_stopping.get("min_lr", 1e-7),
+            patience=cfg.experiment.lr_early_stopping.get("patience", 0),
+            verbose=cfg.experiment.lr_early_stopping.get("verbose", True),
+            check_frequency=cfg.experiment.lr_early_stopping.get("check_frequency", 1),
+        )
+        callbacks.append(lr_early_stopping)
+        print(f"Learning rate early stopping enabled with min_lr={lr_early_stopping.min_lr}")
+
     if getattr(cfg.model, "ema", False):
         ema_decay = getattr(cfg.model, "ema_decay", 0.999)
         callbacks.append(EMACallback(decay=ema_decay))

@@ -1,0 +1,16 @@
+data: {}
+model:
+  kwargs: {}
+  name: state_transition
+name: example_with_lr_early_stopping
+output_dir: ./outputs
+training:
+  gradient_clip_val: 1.0
+  lr_early_stopping:
+    check_frequency: 100
+    enabled: true
+    min_lr: 1.0e-07
+    patience: 5
+    verbose: true
+  max_steps: 50000
+  val_freq: 1000

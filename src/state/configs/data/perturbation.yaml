@@ -16,6 +16,8 @@ kwargs:
   control_pert: DMSO_TF
   map_controls: true # for a control cell, should we use it as the target (learn identity) or sample a control?
   perturbation_features_file: null
+  only_keep_perts_with_expression: false # only keep perturbations for which expression data is available
+  esm_perts_only: false # only keep perturbations that have ESM2 encodings available
   store_raw_basal: false
   int_counts: false
   barcode: true

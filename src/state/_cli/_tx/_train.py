@@ -23,6 +23,7 @@ def run_tx_train(cfg: DictConfig):
     import torch
     from cell_load.data_modules import PerturbationDataModule
     from cell_load.utils.modules import get_datamodule
+    from state.tx.data.perturbation_filtering import apply_perturbation_filtering
     from lightning.pytorch.loggers import WandbLogger
     from lightning.pytorch.plugins.precision import MixedPrecision
 
@@ -109,6 +110,8 @@ def run_tx_train(cfg: DictConfig):
         batch_size=cfg["training"]["batch_size"],
         cell_sentence_len=sentence_len,
     )
+    # Apply perturbation filtering if esm_perts_only is enabled
+    apply_perturbation_filtering(data_module, cfg["data"]["kwargs"].get("esm_perts_only", False))
 
     with open(join(run_output_dir, "data_module.torch"), "wb") as f:
         # TODO-Abhi: only save necessary data

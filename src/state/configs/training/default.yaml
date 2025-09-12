@@ -10,3 +10,4 @@ gradient_clip_val: 10 # 0 means no clipping
 loss_fn: mse
 devices: 1  # Number of GPUs to use for training
 strategy: auto  # DDP strategy for multi-GPU training
+basal_dropout_prob: 0.

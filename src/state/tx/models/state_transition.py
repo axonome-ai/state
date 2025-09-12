@@ -167,7 +167,9 @@ class StateTransitionPerturbationModel(PerturbationModel):
         self.decoder_loss_weight = kwargs.get("decoder_weight", 1.0)
         self.regularization = kwargs.get("regularization", 0.0)
         self.detach_decoder = kwargs.get("detach_decoder", False)
-        self.basal_dropout_prob = kwargs.get("basal_dropout_prob", 0.)
+        # Support both basal_dropout_prob and input_dropout for backward compatibility
+        # input_dropout takes precedence if both are provided
+        self.basal_dropout_prob = kwargs.get("input_dropout", kwargs.get("basal_dropout_prob", 0.))
 
         self.transformer_backbone_key = transformer_backbone_key
         self.transformer_backbone_kwargs = transformer_backbone_kwargs or {}
@@ -331,7 +333,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         """
         Here we instantiate the actual GPT2-based model.
         """
-        self.basal_dropout = nn.Dropout(self.basal_dropout_prob if self.training else 0.0)
+        self.basal_dropout = nn.Dropout(self.basal_dropout_prob)
 
         self.pert_encoder = build_mlp(
             in_dim=self.pert_dim,

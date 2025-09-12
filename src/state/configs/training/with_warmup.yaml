@@ -1,0 +1,33 @@
+# Training configuration with warm-up support
+# This extends the default training config with warm-up settings
+
+wandb_track: false
+weight_decay: 0.0005
+batch_size: 16
+lr: 1e-4
+max_steps: 40000
+train_seed: 42
+val_freq: 2000
+ckpt_every_n_steps: 2000
+gradient_clip_val: 10 # 0 means no clipping
+loss_fn: mse
+devices: 1  # Number of GPUs to use for training
+strategy: auto  # DDP strategy for multi-GPU training
+
+# Warm-up configuration
+warmup:
+  enabled: true
+  steps: 1000
+  type: linear  # linear, cosine, exponential, constant
+  start_factor: 0.1
+  end_factor: 1.0
+  exponential_gamma: 0.9
+  cosine_eta_min: 0.0
+
+# Learning rate scheduler configuration (without warm-up)
+lr_scheduler:
+  name: cosine_annealing
+  max_lr: 1e-4
+  min_lr: 1e-6
+  T_max: null  # Will use total training steps
+  eta_min_ratio: 0.1

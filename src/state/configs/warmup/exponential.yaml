@@ -1,0 +1,9 @@
+# Exponential warm-up configuration
+# Provides more aggressive warm-up in early steps
+
+enabled: true
+steps: 1500
+type: exponential
+start_factor: 0.05
+end_factor: 1.0
+exponential_gamma: 0.8

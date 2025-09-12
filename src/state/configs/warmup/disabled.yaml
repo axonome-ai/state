@@ -1,0 +1,8 @@
+# Disabled warm-up configuration
+# Use this to disable warm-up entirely
+
+enabled: false
+steps: 0
+type: linear
+start_factor: 1.0
+end_factor: 1.0

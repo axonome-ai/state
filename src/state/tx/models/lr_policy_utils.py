@@ -279,7 +279,7 @@ def print_policy_info(policy_name: str):
         policy_name: Name of the policy to get information about
     """
     try:
-        policy_class = LearningRatePolicyFactory._policies[policy_name]
+        policy_class = LearningRatePolicyFactory._policy_map[policy_name]
         print(f"Policy: {policy_name}")
         print("-" * 40)
         print(f"Class: {policy_class.__name__}")

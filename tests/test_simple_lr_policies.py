@@ -11,6 +11,12 @@ import pytest
 import torch
 import lightning as L
 from unittest.mock import Mock
+import warnings
+
+# Suppress known harmless warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="requests")
+warnings.filterwarnings("ignore", message=".*RequestsDependencyWarning.*")
+warnings.filterwarnings("ignore", message=".*loss_fn.*already saved during checkpointing.*")
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))

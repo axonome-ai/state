@@ -1,0 +1,12 @@
+# Default warm-up configuration
+# This configuration can be used with any learning rate scheduler
+
+enabled: true
+steps: 1000
+type: linear  # linear, cosine, exponential, constant
+start_factor: 0.1
+end_factor: 1.0
+
+# Additional parameters for specific warm-up types
+exponential_gamma: 0.9
+cosine_eta_min: 0.0

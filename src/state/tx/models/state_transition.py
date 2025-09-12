@@ -122,6 +122,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         output_space: str = "gene",
         gene_dim: Optional[int] = None,
         lr_scheduler: Optional[str] = None,
+        lr_policy_config: Optional[Dict[str, Any]] = None,
         **kwargs,
     ):
         """
@@ -181,7 +182,12 @@ class StateTransitionPerturbationModel(PerturbationModel):
         # Initialize learning rate scheduler
         self.lr_scheduler = lr_scheduler
         self.lr_policy = None
-        if should_use_scheduler(self.lr_scheduler):
+        
+        # Handle new lr_policy_config parameter
+        if lr_policy_config is not None:
+            from .lr_policies import create_lr_policy_from_config
+            self.lr_policy = create_lr_policy_from_config(lr_policy_config)
+        elif should_use_scheduler(self.lr_scheduler):
             self.lr_policy = create_lr_policy(self.lr_scheduler, **kwargs)
 
         # Build the distributional loss from geomloss

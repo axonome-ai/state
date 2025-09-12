@@ -1,0 +1,9 @@
+# Cosine warm-up configuration
+# Provides smoother warm-up curve compared to linear
+
+enabled: true
+steps: 2000
+type: cosine
+start_factor: 0.01
+end_factor: 1.0
+cosine_eta_min: 0.0

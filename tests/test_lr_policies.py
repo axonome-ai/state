@@ -11,6 +11,12 @@ import pytest
 import torch
 import lightning as L
 from unittest.mock import Mock
+import warnings
+
+# Suppress known harmless warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="requests")
+warnings.filterwarnings("ignore", message=".*RequestsDependencyWarning.*")
+warnings.filterwarnings("ignore", message=".*loss_fn.*already saved during checkpointing.*")
 
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
@@ -76,6 +82,7 @@ class TestLearningRatePolicies:
         # Test that scheduler can be created and stepped
         scheduler = scheduler_config["scheduler"]
         for _ in range(10):
+            self.optimizer.step()  # Call optimizer.step() before scheduler.step()
             scheduler.step()
         
         assert policy.get_name() == "cosine_annealing"
@@ -98,6 +105,7 @@ class TestLearningRatePolicies:
         # Test that scheduler can be created and stepped
         scheduler = scheduler_config["scheduler"]
         for _ in range(10):
+            self.optimizer.step()  # Call optimizer.step() before scheduler.step()
             scheduler.step()
         
         assert policy.get_name() == "one_cycle"
@@ -122,6 +130,7 @@ class TestLearningRatePolicies:
         # Test that scheduler can be created and stepped
         scheduler = scheduler_config["scheduler"]
         for _ in range(10):
+            self.optimizer.step()  # Call optimizer.step() before scheduler.step()
             scheduler.step()
         
         assert policy.get_name() == "warmup_cosine_restarts"
@@ -147,7 +156,8 @@ class TestLearningRatePolicies:
         # Test that scheduler can be created and stepped
         scheduler = scheduler_config["scheduler"]
         for _ in range(10):
-            scheduler.step()
+            self.optimizer.step()  # Call optimizer.step() before scheduler.step()
+            scheduler.step(0.5)  # Provide metrics parameter for ReduceLROnPlateau
         
         assert policy.get_name() == "reduce_on_plateau"
     
@@ -169,6 +179,7 @@ class TestLearningRatePolicies:
         # Test that scheduler can be created and stepped
         scheduler = scheduler_config["scheduler"]
         for _ in range(10):
+            self.optimizer.step()  # Call optimizer.step() before scheduler.step()
             scheduler.step()
         
         assert policy.get_name() == "polynomial_decay"
@@ -192,6 +203,7 @@ class TestLearningRatePolicies:
         # Test that scheduler can be created and stepped
         scheduler = scheduler_config["scheduler"]
         for _ in range(10):
+            self.optimizer.step()  # Call optimizer.step() before scheduler.step()
             scheduler.step()
         
         assert policy.get_name() == "custom_lambda"
@@ -533,8 +545,13 @@ class TestStateTransitionModelWithLRPolicies:
             scheduler = scheduler_config["scheduler"]
             
             # Step the scheduler a few times to ensure it works
+            optimizer = optimizer_config["optimizer"]
             for _ in range(5):
-                scheduler.step()
+                optimizer.step()  # Call optimizer.step() before scheduler.step()
+                if policy_name == "reduce_on_plateau":
+                    scheduler.step(0.5)  # Provide metrics parameter for ReduceLROnPlateau
+                else:
+                    scheduler.step()
 
 
 if __name__ == "__main__":

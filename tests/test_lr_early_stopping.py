@@ -121,7 +121,37 @@ def test_lr_early_stopping_no_stop():
     trainer.fit(model, train_loader)
     print("✓ Test passed: Training completed without early stopping")
 
+def test_config_loading():
+    """Test loading config files with early stopping."""
+    
+    print("\nTesting config file loading...")
+    
+    # Test TX config loading
+    try:
+        with open("src/state/configs/early_stopping/tx.yaml", 'r') as f:
+            tx_config = yaml.safe_load(f)
+        
+        assert "training" in tx_config, "training config not found"
+        assert "lr_early_stopping" in tx_config["training"], "lr_early_stopping config not found"
+        assert tx_config["training"]["lr_early_stopping"]["enabled"] == True, "Early stopping not enabled"
+        print("✓ TX config loading test passed")
+    except Exception as e:
+        print(f"✗ TX config loading test failed: {e}")
+    
+    # Test embedding config loading
+    try:
+        with open("src/state/configs/early_stopping/embedding.yaml", 'r') as f:
+            emb_config = yaml.safe_load(f)
+        
+        assert "experiment" in emb_config, "experiment config not found"
+        assert "lr_early_stopping" in emb_config["experiment"], "lr_early_stopping config not found"
+        assert emb_config["experiment"]["lr_early_stopping"]["enabled"] == True, "Early stopping not enabled"
+        print("✓ Embedding config loading test passed")
+    except Exception as e:
+        print(f"✗ Embedding config loading test failed: {e}")
+
 if __name__ == "__main__":
     test_lr_early_stopping()
     test_lr_early_stopping_no_stop()
+    test_config_loading()
     print("\nAll tests completed!")

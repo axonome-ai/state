@@ -11,6 +11,16 @@ def add_arguments_train(parser: ap.ArgumentParser):
 
 
 def run_tx_train(cfg: DictConfig):
+    # Apply perturbation filtering based on ESM2 features BEFORE any data module creation
+    from state.tx.data.perturbation_filtering import patch_perturbation_data_module_for_filtering, restore_perturbation_data_module
+    
+    # Check if filtering should be applied
+    esm_perts_only = cfg.get('data', {}).get('kwargs', {}).get('esm_perts_only', False)
+    perturbation_features_file = cfg.get('data', {}).get('kwargs', {}).get('perturbation_features_file')
+    
+    if esm_perts_only and perturbation_features_file:
+        patch_perturbation_data_module_for_filtering(perturbation_features_file)
+    
     import json
     import logging
     import os
@@ -18,12 +28,11 @@ def run_tx_train(cfg: DictConfig):
     import shutil
     from os.path import exists, join
     from pathlib import Path
-
+    
     import lightning.pytorch as pl
     import torch
     from cell_load.data_modules import PerturbationDataModule
     from cell_load.utils.modules import get_datamodule
-    from state.tx.data.perturbation_filtering import apply_perturbation_filtering
     from lightning.pytorch.loggers import WandbLogger
     from lightning.pytorch.plugins.precision import MixedPrecision
 
@@ -110,8 +119,10 @@ def run_tx_train(cfg: DictConfig):
         batch_size=cfg["training"]["batch_size"],
         cell_sentence_len=sentence_len,
     )
-    # Apply perturbation filtering if esm_perts_only is enabled
-    apply_perturbation_filtering(data_module, cfg["data"]["kwargs"].get("esm_perts_only", False))
+    
+    # Manually add missing parameters that might not be passed through get_datamodule
+    if 'esm_perts_only' in cfg['data']['kwargs']:
+        data_module.esm_perts_only = cfg['data']['kwargs']['esm_perts_only']
 
     with open(join(run_output_dir, "data_module.torch"), "wb") as f:
         # TODO-Abhi: only save necessary data
@@ -374,3 +385,6 @@ def run_tx_train(cfg: DictConfig):
     checkpoint_path = join(ckpt_callbacks[0].dirpath, "final.ckpt")
     if not exists(checkpoint_path):
         trainer.save_checkpoint(checkpoint_path)
+    
+    # Restore original methods after training
+    restore_perturbation_data_module()

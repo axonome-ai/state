@@ -10,3 +10,4 @@ end_factor: 1.0
 # Additional parameters for specific warm-up types
 exponential_gamma: 0.9
 cosine_eta_min: 0.0
+

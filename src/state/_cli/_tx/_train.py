@@ -36,7 +36,7 @@ def run_tx_train(cfg: DictConfig):
     from lightning.pytorch.loggers import WandbLogger
     from lightning.pytorch.plugins.precision import MixedPrecision
 
-    from ...tx.callbacks import BatchSpeedMonitorCallback
+    from ...tx.callbacks import BatchSpeedMonitorCallback, EpochTimingCallback
     from ...tx.utils import get_checkpoint_callbacks, get_lightning_module, get_loggers
 
     logger = logging.getLogger(__name__)
@@ -213,6 +213,9 @@ def run_tx_train(cfg: DictConfig):
     # Add BatchSpeedMonitorCallback to log batches per second to wandb
     batch_speed_monitor = BatchSpeedMonitorCallback()
     
+    # Add EpochTimingCallback to log epoch timing metrics to wandb
+    epoch_timing = EpochTimingCallback()
+    
     # Add LearningRateEarlyStopping callback if configured
     lr_early_stopping = None
     if cfg["training"].get("lr_early_stopping", {}).get("enabled", False):
@@ -225,7 +228,7 @@ def run_tx_train(cfg: DictConfig):
         )
         logger.info(f"Learning rate early stopping enabled with min_lr={lr_early_stopping.min_lr}")
     
-    callbacks = ckpt_callbacks + [batch_speed_monitor]
+    callbacks = ckpt_callbacks + [batch_speed_monitor, epoch_timing]
     if lr_early_stopping:
         callbacks.append(lr_early_stopping)
 

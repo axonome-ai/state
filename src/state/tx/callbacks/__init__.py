@@ -5,8 +5,9 @@ from torch.optim import Optimizer
 from ..models import PerturbationModel
 from .batch_speed_monitor import BatchSpeedMonitorCallback
 from .lr_early_stopping import LearningRateEarlyStopping
+from .epoch_timing import EpochTimingCallback
 
-__all__ = ["PerturbationModel", "BatchSpeedMonitorCallback", "LearningRateEarlyStopping"]
+__all__ = ["PerturbationModel", "BatchSpeedMonitorCallback", "LearningRateEarlyStopping", "EpochTimingCallback"]
 
 
 class GradNormCallback(Callback):

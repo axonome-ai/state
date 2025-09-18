@@ -155,6 +155,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         self.regularization = kwargs.get("regularization", 0.0)
         self.detach_decoder = kwargs.get("detach_decoder", False)
         self.basal_dropout_prob = kwargs.get("basal_dropout_prob", 0.)
+        self.basal_gaussian_noise = kwargs.get("basal_gaussian_noise", 0.)
 
         self.transformer_backbone_key = transformer_backbone_key
         self.transformer_backbone_kwargs = transformer_backbone_kwargs
@@ -328,9 +329,13 @@ class StateTransitionPerturbationModel(PerturbationModel):
         return self.pert_encoder(pert)
 
     def encode_basal_expression(self, expr: torch.Tensor) -> torch.Tensor:
-        """Apply dropout-based augmentation to basal input and encode it."""
+        """Apply dropout-based augmentation and Gaussian noise to basal input and encode it."""
         if self.training:
             expr = self.basal_dropout(expr)
+            # Add Gaussian noise to basal variable before encoding
+            if self.basal_gaussian_noise > 0.:
+                noise = torch.randn_like(expr) * self.basal_gaussian_noise
+                expr = expr + noise
         return self.basal_encoder(expr)
 
     def forward(self, batch: dict, padded=True) -> torch.Tensor:

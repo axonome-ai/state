@@ -11,3 +11,4 @@ loss_fn: mse
 devices: 1  # Number of GPUs to use for training
 strategy: auto  # DDP strategy for multi-GPU training
 basal_dropout_prob: 0.
+basal_gaussian_noise: 0.

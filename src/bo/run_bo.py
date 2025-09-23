@@ -6,7 +6,7 @@ Simple runner script for Bayesian optimization.
 import yaml
 import sys
 from pathlib import Path
-from bayesian_optimization import BayesianOptimizer
+from .bayesian_optimization import BayesianOptimizer
 
 
 def load_config(config_path: str = "src/state/configs/bo/bo_config.yaml"):

@@ -27,7 +27,7 @@ def get_bo_results(config_name: str = "bo_config_example"):
         return
     
     # Load BO config to get tunable parameters
-    config_path = Path(f"{config_name}.yaml")
+    config_path = Path(f"src/state/configs/bo/{config_name}.yaml")
     if not config_path.exists():
         print(f"❌ Config file not found: {config_path}")
         return

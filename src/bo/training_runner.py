@@ -209,7 +209,7 @@ class TrainingRunner:
                     if line:
                         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         print(f"[TRAINING] [{timestamp}] {line.rstrip()}")  # Show live output with prefix and timestamp
-                        logger.info(f"Training: {line.rstrip()}")
+                        logger.info(f"{line.rstrip()}")
             
             # Wait for process to complete
             process.wait()
@@ -300,7 +300,7 @@ class TrainingRunner:
                     if line:
                         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         print(f"[EVALUATION] [{timestamp}] {line.rstrip()}")  # Show live output with prefix and timestamp
-                        logger.info(f"Evaluation: {line.rstrip()}")
+                        logger.info(f"{line.rstrip()}")
             
             # Wait for process to complete
             process.wait()

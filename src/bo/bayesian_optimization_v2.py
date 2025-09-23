@@ -21,8 +21,8 @@ from typing import Dict, Any, Tuple, Optional
 import json
 import time
 from datetime import datetime
-from training_runner import TrainingRunner
-from bo_config_manager import BOConfigManager
+from .training_runner import TrainingRunner
+from .bo_config_manager import BOConfigManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -105,7 +105,7 @@ class BayesianOptimizerV2:
         self._setup_logging()
         
         # Generate BO session ID
-        from state.utils.naming import generate_run_name
+        from ..state.utils.naming import generate_run_name
         self.bo_session_id = generate_run_name("bo")
         
         # Define search space from config

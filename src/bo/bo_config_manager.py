@@ -185,7 +185,7 @@ class BOConfigManager:
     
     def get_next_run_id(self, run_dir: Path, config_name: str = None) -> str:
         """Get the next run ID for training runs."""
-        from state.utils.naming import generate_run_name
+        from ..state.utils.naming import generate_run_name
         
         runs_dir = run_dir / "runs"
         runs_dir.mkdir(exist_ok=True)

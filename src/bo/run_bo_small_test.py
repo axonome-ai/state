@@ -7,14 +7,13 @@ This runs a quick test with only 6 iterations and 100 steps each.
 import logging
 import time
 from datetime import datetime
-from bayesian_optimization import BayesianOptimizer, load_config
+from .bayesian_optimization import BayesianOptimizer, load_config
 
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('bo_small_test.log'),
         logging.StreamHandler()
     ]
 )

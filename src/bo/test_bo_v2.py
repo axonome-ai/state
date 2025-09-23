@@ -12,8 +12,8 @@ import os
 import yaml
 import tempfile
 from pathlib import Path
-from bo_config_manager import BOConfigManager
-from bayesian_optimization_v2 import BayesianOptimizerV2
+from .bo_config_manager import BOConfigManager
+from .bayesian_optimization_v2 import BayesianOptimizerV2
 
 
 def create_test_config():

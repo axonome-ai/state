@@ -13,8 +13,8 @@ Examples:
 import sys
 import yaml
 from pathlib import Path
-from bayesian_optimization_v2 import BayesianOptimizerV2
-from bo_config_manager import BOConfigManager
+from .bayesian_optimization_v2 import BayesianOptimizerV2
+from .bo_config_manager import BOConfigManager
 
 
 def main():

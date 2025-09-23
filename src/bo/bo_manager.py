@@ -12,7 +12,7 @@ This script provides commands for:
 import sys
 import json
 from pathlib import Path
-from bo_config_manager import BOConfigManager
+from .bo_config_manager import BOConfigManager
 
 
 def list_runs():

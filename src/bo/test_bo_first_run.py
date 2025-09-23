@@ -9,14 +9,13 @@ import logging
 import numpy as np
 import time
 from datetime import datetime
-from training_runner import TrainingRunner
+from .training_runner import TrainingRunner
 
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('test_bo_run.log'),
         logging.StreamHandler()
     ]
 )

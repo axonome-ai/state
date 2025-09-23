@@ -23,14 +23,13 @@ from typing import Dict, Any, Tuple, Optional
 import json
 import time
 from datetime import datetime
-from training_runner import TrainingRunner
+from .training_runner import TrainingRunner
 
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('bayesian_optimization.log'),
         logging.StreamHandler()
     ]
 )

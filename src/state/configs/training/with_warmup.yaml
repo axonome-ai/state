@@ -16,7 +16,7 @@ strategy: auto  # DDP strategy for multi-GPU training
 
 # Warm-up configuration
 warmup:
-  enabled: true
+  enabled: false
   steps: 1000
   type: linear  # linear, cosine, exponential, constant
   start_factor: 0.1
@@ -24,11 +24,6 @@ warmup:
   exponential_gamma: 0.9
   cosine_eta_min: 0.0
 
-# Learning rate scheduler configuration (without warm-up)
-lr_scheduler:
-  name: cosine_annealing
-  max_lr: 1e-4
-  min_lr: 1e-6
-  T_max: null  # Will use total training steps
-  eta_min_ratio: 0.1
+# Learning rate scheduler is configured via model.kwargs.lr_policy_config
+# See model configs for lr_policy_config settings
 

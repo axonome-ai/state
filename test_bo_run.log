@@ -1,0 +1,1064 @@
+2025-09-17 11:05:15,376 - INFO - Testing single training run with default parameters...
+2025-09-17 11:05:15,376 - INFO - Running command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=100 training.ckpt_every_n_steps=50 training.val_freq=50 model=state_sm output_dir=competition_test validations.diff_exp.enable=true validations.perturbation.enable=true training=with_warmup training.loss_fn=mse +model.kwargs.lr_policy_config.name=cosine_annealing training.warmup.enabled=true +model.kwargs.input_dropout=0.0 output_dir=competition_test/test_run_20250917_110515
+2025-09-17 11:05:15,376 - INFO - Parameters: {'input_dropout': 0.0, 'loss_fn': 'mse', 'lr_scheduler': 'cosine_annealing', 'warmup_enabled': True}
+2025-09-17 11:05:15,376 - INFO - 
+Starting training...
+2025-09-17 11:08:53,756 - INFO - Testing single training run with default parameters...
+2025-09-17 11:08:53,756 - INFO - Initialized TrainingRunner with max_steps=100, num_workers=8
+2025-09-17 11:08:53,756 - INFO - 
+============================================================
+2025-09-17 11:08:53,756 - INFO - Running training with parameters:
+2025-09-17 11:08:53,756 - INFO -   input_dropout: 0.0
+2025-09-17 11:08:53,756 - INFO -   loss_fn: mse
+2025-09-17 11:08:53,756 - INFO -   lr_scheduler: cosine_annealing
+2025-09-17 11:08:53,756 - INFO -   warmup_enabled: True
+2025-09-17 11:08:53,756 - INFO - ============================================================
+2025-09-17 11:08:53,756 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=100 training.ckpt_every_n_steps=50 training.val_freq=50 model=state_sm output_dir=competition_test/test_run_20250917_110853 validations.diff_exp.enable=true validations.perturbation.enable=true training=with_warmup training.loss_fn=mse +model.kwargs.lr_policy_config.name=cosine_annealing training.warmup.enabled=true +model.kwargs.input_dropout=0.0
+2025-09-17 11:08:53,756 - INFO - Executing training command...
+2025-09-17 11:14:22,847 - INFO - Training completed successfully!
+2025-09-17 11:14:22,848 - INFO - Evaluating model in competition_test/test_run_20250917_110853
+2025-09-17 11:14:22,848 - INFO - Running evaluation...
+2025-09-17 11:14:22,912 - ERROR - Evaluation failed with error: Command '['python', 'run_checkpoint_evaluation.py', '--model_dir', 'competition_test/test_run_20250917_110853', '--adata', '/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml', '--prepro', '--seed', '42', '--ctrl_pert_option', 'replace']' returned non-zero exit status 1.
+2025-09-17 11:14:22,912 - ERROR - Pipeline failed: Evaluation failed: Command '['python', 'run_checkpoint_evaluation.py', '--model_dir', 'competition_test/test_run_20250917_110853', '--adata', '/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml', '--prepro', '--seed', '42', '--ctrl_pert_option', 'replace']' returned non-zero exit status 1.
+2025-09-17 11:14:22,912 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-17 11:15:54,564 - INFO - Testing single training run with default parameters...
+2025-09-17 11:15:54,564 - INFO - Initialized TrainingRunner with max_steps=20, num_workers=8
+2025-09-17 11:15:54,564 - INFO - 
+============================================================
+2025-09-17 11:15:54,564 - INFO - Running training with parameters:
+2025-09-17 11:15:54,564 - INFO -   input_dropout: 0.0
+2025-09-17 11:15:54,564 - INFO -   loss_fn: mse
+2025-09-17 11:15:54,564 - INFO -   lr_scheduler: cosine_annealing
+2025-09-17 11:15:54,564 - INFO -   warmup_enabled: True
+2025-09-17 11:15:54,564 - INFO - ============================================================
+2025-09-17 11:15:54,564 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=20 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=competition_test/test_run_20250917_111554 validations.diff_exp.enable=true validations.perturbation.enable=true training=with_warmup training.loss_fn=mse +model.kwargs.lr_policy_config.name=cosine_annealing training.warmup.enabled=true +model.kwargs.input_dropout=0.0
+2025-09-17 11:15:54,565 - INFO - Executing training command...
+2025-09-17 11:20:51,096 - INFO - Training completed successfully!
+2025-09-17 11:20:51,100 - INFO - Evaluating model in competition_test/test_run_20250917_111554
+2025-09-17 11:20:51,100 - INFO - Using checkpoint directory: competition_test/test_run_20250917_111554/2025-09-17T11:15:56.408412
+2025-09-17 11:20:51,100 - INFO - Running evaluation...
+2025-09-17 11:20:58,545 - INFO - Evaluation completed successfully!
+2025-09-17 11:20:58,545 - WARNING - No agg_results.csv found in competition_test/test_run_20250917_111554/eval_results
+2025-09-17 11:20:58,545 - ERROR - Pipeline failed: Failed to extract score
+2025-09-17 11:20:58,545 - ERROR - Total test time: 303.98 seconds
+2025-09-17 11:20:58,545 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-17 11:25:46,965 - INFO - Testing single training run with default parameters...
+2025-09-17 11:25:46,966 - INFO - Initialized TrainingRunner with max_steps=20, num_workers=8
+2025-09-17 11:25:46,966 - INFO - 
+============================================================
+2025-09-17 11:25:46,966 - INFO - Running training with parameters:
+2025-09-17 11:25:46,966 - INFO -   input_dropout: 0.0
+2025-09-17 11:25:46,966 - INFO -   loss_fn: mse
+2025-09-17 11:25:46,966 - INFO -   lr_scheduler: cosine_annealing
+2025-09-17 11:25:46,966 - INFO -   warmup_enabled: True
+2025-09-17 11:25:46,966 - INFO - ============================================================
+2025-09-17 11:25:46,966 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=20 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=competition_test/test_run_20250917_112546 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250917_112546] use_wandb=true training=with_warmup training.loss_fn=mse +model.kwargs.lr_policy_config.name=cosine_annealing training.warmup.enabled=true +model.kwargs.input_dropout=0.0
+2025-09-17 11:25:46,966 - INFO - Executing training command...
+2025-09-17 11:27:06,771 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=20', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=competition_test/test_run_20250917_112546', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250917_112546]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=mse', '+model.kwargs.lr_policy_config.name=cosine_annealing', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.0']' returned non-zero exit status 1.
+2025-09-17 11:27:06,771 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=20', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=competition_test/test_run_20250917_112546', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250917_112546]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=mse', '+model.kwargs.lr_policy_config.name=cosine_annealing', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.0']' returned non-zero exit status 1.
+2025-09-17 11:27:06,771 - ERROR - Total test time: 79.81 seconds
+2025-09-17 11:27:06,771 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-17 11:30:04,319 - INFO - Testing single training run with default parameters...
+2025-09-17 11:30:04,319 - INFO - Initialized TrainingRunner with max_steps=20, num_workers=8
+2025-09-17 11:30:04,319 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-17 11:30:04,319 - INFO - 
+============================================================
+2025-09-17 11:30:04,320 - INFO - Running training with parameters:
+2025-09-17 11:30:04,320 - INFO -   input_dropout: 0.0
+2025-09-17 11:30:04,320 - INFO -   loss_fn: mse
+2025-09-17 11:30:04,320 - INFO -   lr_scheduler: cosine_annealing
+2025-09-17 11:30:04,320 - INFO -   warmup_enabled: True
+2025-09-17 11:30:04,320 - INFO - ============================================================
+2025-09-17 11:30:04,320 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=20 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250917_113004 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250917_113004] use_wandb=true training=with_warmup training.loss_fn=mse +model.kwargs.lr_policy_config.name=cosine_annealing training.warmup.enabled=true +model.kwargs.input_dropout=0.0
+2025-09-17 11:30:04,320 - INFO - Executing training command...
+2025-09-17 11:30:14,156 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=20', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250917_113004', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250917_113004]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=mse', '+model.kwargs.lr_policy_config.name=cosine_annealing', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.0']' returned non-zero exit status 1.
+2025-09-17 11:30:14,156 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=20', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250917_113004', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250917_113004]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=mse', '+model.kwargs.lr_policy_config.name=cosine_annealing', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.0']' returned non-zero exit status 1.
+2025-09-17 11:30:14,156 - ERROR - Total test time: 9.84 seconds
+2025-09-17 11:30:14,156 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-17 11:30:50,565 - INFO - Testing single training run with default parameters...
+2025-09-17 11:30:50,565 - INFO - Initialized TrainingRunner with max_steps=20, num_workers=8
+2025-09-17 11:30:50,565 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-17 11:30:50,565 - INFO - 
+============================================================
+2025-09-17 11:30:50,565 - INFO - Running training with parameters:
+2025-09-17 11:30:50,566 - INFO -   input_dropout: 0.0
+2025-09-17 11:30:50,566 - INFO -   loss_fn: mse
+2025-09-17 11:30:50,566 - INFO -   lr_scheduler: cosine_annealing
+2025-09-17 11:30:50,566 - INFO -   warmup_enabled: True
+2025-09-17 11:30:50,566 - INFO - ============================================================
+2025-09-17 11:30:50,566 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=20 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250917_113050 name=test_run_20250917_113050 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250917_113050] use_wandb=true training=with_warmup training.loss_fn=mse +model.kwargs.lr_policy_config.name=cosine_annealing training.warmup.enabled=true +model.kwargs.input_dropout=0.0
+2025-09-17 11:30:50,566 - INFO - Executing training command...
+2025-09-17 11:35:52,094 - ERROR - Training timed out!
+2025-09-17 11:35:52,099 - ERROR - Pipeline failed: Training timed out
+2025-09-17 11:35:52,099 - ERROR - Total test time: 301.53 seconds
+2025-09-17 11:35:52,100 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 13:58:29,567 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 13:58:29,567 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 13:58:29,567 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 13:58:29,838 - INFO - 
+============================================================
+2025-09-18 13:58:29,838 - INFO - Running training with parameters:
+2025-09-18 13:58:29,838 - INFO -   input_dropout: 0.15
+2025-09-18 13:58:29,838 - INFO -   loss_fn: energy
+2025-09-18 13:58:29,838 - INFO -   lr_scheduler: one_cycle
+2025-09-18 13:58:29,838 - INFO -   warmup_enabled: False
+2025-09-18 13:58:29,838 - INFO -   basal_mapping_strategy: nearest
+2025-09-18 13:58:29,838 - INFO -   learning_rate: 0.001
+2025-09-18 13:58:29,839 - INFO -   phase_enabled: True
+2025-09-18 13:58:29,839 - INFO - ============================================================
+2025-09-18 13:58:29,839 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/withPhases/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_135829 name=test_run_20250918_135829 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_135829] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=nearest model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 13:58:29,839 - INFO - Executing training command...
+2025-09-18 13:58:35,919 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/withPhases/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_135829', 'name=test_run_20250918_135829', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_135829]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=nearest', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 13:58:35,919 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/withPhases/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_135829', 'name=test_run_20250918_135829', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_135829]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=nearest', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 13:58:35,919 - ERROR - Total test time: 6.35 seconds
+2025-09-18 13:58:35,919 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:01:37,566 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:01:37,566 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:01:37,566 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:01:37,566 - INFO - 
+============================================================
+2025-09-18 14:01:37,566 - INFO - Running training with parameters:
+2025-09-18 14:01:37,566 - INFO -   input_dropout: 0.15
+2025-09-18 14:01:37,566 - INFO -   loss_fn: energy
+2025-09-18 14:01:37,566 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:01:37,566 - INFO -   warmup_enabled: False
+2025-09-18 14:01:37,566 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:01:37,567 - INFO -   learning_rate: 0.001
+2025-09-18 14:01:37,567 - INFO -   phase_enabled: True
+2025-09-18 14:01:37,567 - INFO - ============================================================
+2025-09-18 14:01:37,567 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140137 name=test_run_20250918_140137 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_140137] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:01:37,567 - INFO - Executing training command...
+2025-09-18 14:01:56,674 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140137', 'name=test_run_20250918_140137', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140137]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:01:56,675 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140137', 'name=test_run_20250918_140137', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140137]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:01:56,675 - ERROR - Total test time: 19.11 seconds
+2025-09-18 14:01:56,675 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:02:29,896 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:02:29,897 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:02:29,897 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:02:29,897 - INFO - 
+============================================================
+2025-09-18 14:02:29,897 - INFO - Running training with parameters:
+2025-09-18 14:02:29,897 - INFO -   input_dropout: 0.15
+2025-09-18 14:02:29,897 - INFO -   loss_fn: energy
+2025-09-18 14:02:29,897 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:02:29,897 - INFO -   warmup_enabled: False
+2025-09-18 14:02:29,897 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:02:29,897 - INFO -   learning_rate: 0.001
+2025-09-18 14:02:29,897 - INFO -   phase_enabled: True
+2025-09-18 14:02:29,897 - INFO - ============================================================
+2025-09-18 14:02:29,897 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140229 name=test_run_20250918_140229 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_140229] use_wandb=true training=with_warmup +model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:02:29,897 - INFO - Executing training command...
+2025-09-18 14:02:31,466 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140229', 'name=test_run_20250918_140229', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140229]', 'use_wandb=true', 'training=with_warmup', '+model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:02:31,467 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140229', 'name=test_run_20250918_140229', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140229]', 'use_wandb=true', 'training=with_warmup', '+model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:02:31,467 - ERROR - Total test time: 1.57 seconds
+2025-09-18 14:02:31,467 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:03:58,826 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:03:58,826 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:03:58,826 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:03:58,827 - INFO - 
+============================================================
+2025-09-18 14:03:58,827 - INFO - Running training with parameters:
+2025-09-18 14:03:58,827 - INFO -   input_dropout: 0.15
+2025-09-18 14:03:58,827 - INFO -   loss_fn: energy
+2025-09-18 14:03:58,827 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:03:58,827 - INFO -   warmup_enabled: False
+2025-09-18 14:03:58,827 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:03:58,827 - INFO -   learning_rate: 0.001
+2025-09-18 14:03:58,827 - INFO -   phase_enabled: True
+2025-09-18 14:03:58,827 - INFO - ============================================================
+2025-09-18 14:03:58,827 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140358 name=test_run_20250918_140358 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_140358] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:03:58,827 - INFO - Executing training command...
+2025-09-18 14:04:17,777 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140358', 'name=test_run_20250918_140358', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140358]', 'use_wandb=true', 'training=with_warmup', 'model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:04:17,777 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140358', 'name=test_run_20250918_140358', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140358]', 'use_wandb=true', 'training=with_warmup', 'model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:04:17,777 - ERROR - Total test time: 18.95 seconds
+2025-09-18 14:04:17,778 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:04:29,238 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:04:29,238 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:04:29,238 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:04:29,239 - INFO - 
+============================================================
+2025-09-18 14:04:29,239 - INFO - Running training with parameters:
+2025-09-18 14:04:29,239 - INFO -   input_dropout: 0.15
+2025-09-18 14:04:29,239 - INFO -   loss_fn: energy
+2025-09-18 14:04:29,239 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:04:29,239 - INFO -   warmup_enabled: False
+2025-09-18 14:04:29,239 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:04:29,239 - INFO -   learning_rate: 0.001
+2025-09-18 14:04:29,239 - INFO -   phase_enabled: True
+2025-09-18 14:04:29,239 - INFO - ============================================================
+2025-09-18 14:04:29,239 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140429 name=test_run_20250918_140429 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_140429] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:04:29,239 - INFO - Executing training command...
+2025-09-18 14:04:48,239 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140429', 'name=test_run_20250918_140429', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140429]', 'use_wandb=true', 'training=with_warmup', 'model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:04:48,240 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140429', 'name=test_run_20250918_140429', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_140429]', 'use_wandb=true', 'training=with_warmup', 'model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=false', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 14:04:48,240 - ERROR - Total test time: 19.00 seconds
+2025-09-18 14:04:48,240 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:05:11,575 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:05:11,575 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:05:11,575 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:05:11,575 - INFO - 
+============================================================
+2025-09-18 14:05:11,575 - INFO - Running training with parameters:
+2025-09-18 14:05:11,575 - INFO -   input_dropout: 0.15
+2025-09-18 14:05:11,575 - INFO -   loss_fn: energy
+2025-09-18 14:05:11,575 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:05:11,576 - INFO -   warmup_enabled: False
+2025-09-18 14:05:11,576 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:05:11,576 - INFO -   learning_rate: 0.001
+2025-09-18 14:05:11,576 - INFO -   phase_enabled: True
+2025-09-18 14:05:11,576 - INFO - ============================================================
+2025-09-18 14:05:11,576 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_140511 name=test_run_20250918_140511 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_140511] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:05:11,576 - INFO - Executing training command...
+2025-09-18 14:10:12,920 - ERROR - Training timed out!
+2025-09-18 14:10:12,923 - ERROR - Pipeline failed: Training timed out
+2025-09-18 14:10:12,923 - ERROR - Total test time: 301.35 seconds
+2025-09-18 14:10:12,923 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:13:38,151 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:13:38,151 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:13:38,151 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:13:38,177 - INFO - 
+============================================================
+2025-09-18 14:13:38,177 - INFO - Running training with parameters:
+2025-09-18 14:13:38,177 - INFO -   input_dropout: 0.15
+2025-09-18 14:13:38,177 - INFO -   loss_fn: energy
+2025-09-18 14:13:38,177 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:13:38,177 - INFO -   warmup_enabled: False
+2025-09-18 14:13:38,178 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:13:38,178 - INFO -   learning_rate: 0.001
+2025-09-18 14:13:38,178 - INFO -   phase_enabled: True
+2025-09-18 14:13:38,178 - INFO - ============================================================
+2025-09-18 14:13:38,178 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_141338 name=test_run_20250918_141338 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_141338] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:13:38,178 - INFO - Executing training command...
+2025-09-18 14:13:55,476 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:13:55,476 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:13:55,476 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:13:55,476 - INFO - 
+============================================================
+2025-09-18 14:13:55,476 - INFO - Running training with parameters:
+2025-09-18 14:13:55,477 - INFO -   input_dropout: 0.15
+2025-09-18 14:13:55,477 - INFO -   loss_fn: energy
+2025-09-18 14:13:55,477 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:13:55,477 - INFO -   warmup_enabled: False
+2025-09-18 14:13:55,477 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:13:55,477 - INFO -   learning_rate: 0.001
+2025-09-18 14:13:55,477 - INFO -   phase_enabled: True
+2025-09-18 14:13:55,477 - INFO - ============================================================
+2025-09-18 14:13:55,477 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_141355 name=test_run_20250918_141355 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_141355] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=false +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:13:55,477 - INFO - Executing training command...
+2025-09-18 14:15:45,782 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:15:45,783 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:15:45,783 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:15:45,783 - INFO - 
+============================================================
+2025-09-18 14:15:45,783 - INFO - Running training with parameters:
+2025-09-18 14:15:45,783 - INFO -   input_dropout: 0.15
+2025-09-18 14:15:45,783 - INFO -   loss_fn: energy
+2025-09-18 14:15:45,783 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:15:45,783 - INFO -   warmup_enabled: True
+2025-09-18 14:15:45,783 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:15:45,783 - INFO -   learning_rate: 0.001
+2025-09-18 14:15:45,783 - INFO -   phase_enabled: True
+2025-09-18 14:15:45,783 - INFO - ============================================================
+2025-09-18 14:15:45,783 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_141545 name=test_run_20250918_141545 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_141545] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:15:45,783 - INFO - Executing training command...
+2025-09-18 14:17:37,914 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_141545', 'name=test_run_20250918_141545', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_141545]', 'use_wandb=true', 'training=with_warmup', 'model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' died with <Signals.SIGKILL: 9>.
+2025-09-18 14:17:37,916 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_141545', 'name=test_run_20250918_141545', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_141545]', 'use_wandb=true', 'training=with_warmup', 'model.kwargs.loss=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' died with <Signals.SIGKILL: 9>.
+2025-09-18 14:17:37,917 - ERROR - Total test time: 112.13 seconds
+2025-09-18 14:17:37,917 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:18:19,061 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:18:19,061 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:18:19,061 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:18:19,062 - INFO - 
+============================================================
+2025-09-18 14:18:19,062 - INFO - Running training with parameters:
+2025-09-18 14:18:19,062 - INFO -   input_dropout: 0.15
+2025-09-18 14:18:19,062 - INFO -   loss_fn: energy
+2025-09-18 14:18:19,062 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:18:19,062 - INFO -   warmup_enabled: True
+2025-09-18 14:18:19,063 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:18:19,063 - INFO -   learning_rate: 0.001
+2025-09-18 14:18:19,063 - INFO -   phase_enabled: True
+2025-09-18 14:18:19,063 - INFO - ============================================================
+2025-09-18 14:18:19,063 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_141819 name=test_run_20250918_141819 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_141819] use_wandb=true training=with_warmup model.kwargs.loss=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 14:18:19,063 - INFO - Executing training command...
+2025-09-18 14:23:20,537 - ERROR - Training timed out!
+2025-09-18 14:23:20,537 - ERROR - Pipeline failed: Training timed out
+2025-09-18 14:23:20,537 - ERROR - Total test time: 301.48 seconds
+2025-09-18 14:23:20,537 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 14:28:45,871 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 14:28:45,871 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 14:28:45,871 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 14:28:45,889 - INFO - 
+============================================================
+2025-09-18 14:28:45,889 - INFO - Running training with parameters:
+2025-09-18 14:28:45,889 - INFO -   input_dropout: 0.15
+2025-09-18 14:28:45,890 - INFO -   loss_fn: energy
+2025-09-18 14:28:45,890 - INFO -   lr_scheduler: one_cycle
+2025-09-18 14:28:45,890 - INFO -   warmup_enabled: True
+2025-09-18 14:28:45,890 - INFO -   basal_mapping_strategy: phase
+2025-09-18 14:28:45,890 - INFO -   learning_rate: 0.001
+2025-09-18 14:28:45,890 - INFO -   phase_enabled: True
+2025-09-18 14:28:45,890 - INFO - ============================================================
+2025-09-18 14:28:45,890 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_142845 name=test_run_20250918_142845 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_142845] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase
+2025-09-18 14:28:45,890 - INFO - Executing training command...
+2025-09-18 14:42:55,311 - INFO - Training completed successfully!
+2025-09-18 14:42:55,313 - INFO - Evaluating model in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_142845
+2025-09-18 14:42:55,338 - INFO - Using checkpoint directory: /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_142845/test_run_20250918_142845
+2025-09-18 14:42:55,339 - INFO - Using base config data: /home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml
+2025-09-18 14:42:55,339 - INFO - Running evaluation...
+2025-09-18 14:43:23,068 - INFO - Evaluation completed successfully!
+2025-09-18 14:43:23,068 - WARNING - No agg_results.csv found in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_142845/eval_results
+2025-09-18 14:43:23,068 - ERROR - Pipeline failed: Failed to extract score
+2025-09-18 14:43:23,068 - ERROR - Total test time: 877.20 seconds
+2025-09-18 14:43:23,068 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 15:34:31,675 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 15:34:31,675 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 15:34:31,675 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 15:34:31,921 - INFO - 
+============================================================
+2025-09-18 15:34:31,921 - INFO - Running training with parameters:
+2025-09-18 15:34:31,921 - INFO -   input_dropout: 0.15
+2025-09-18 15:34:31,921 - INFO -   loss_fn: energy
+2025-09-18 15:34:31,921 - INFO -   lr_scheduler: one_cycle
+2025-09-18 15:34:31,921 - INFO -   warmup_enabled: True
+2025-09-18 15:34:31,921 - INFO -   basal_mapping_strategy: phase
+2025-09-18 15:34:31,921 - INFO -   learning_rate: 0.001
+2025-09-18 15:34:31,921 - INFO -   phase_enabled: True
+2025-09-18 15:34:31,921 - INFO - ============================================================
+2025-09-18 15:34:31,921 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_153431 name=test_run_20250918_153431 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_153431] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase
+2025-09-18 15:34:31,921 - INFO - Executing training command...
+2025-09-18 15:36:36,098 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 15:36:36,098 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 15:36:36,099 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 15:36:36,099 - INFO - 
+============================================================
+2025-09-18 15:36:36,099 - INFO - Running training with parameters:
+2025-09-18 15:36:36,099 - INFO -   input_dropout: 0.15
+2025-09-18 15:36:36,099 - INFO -   loss_fn: energy
+2025-09-18 15:36:36,099 - INFO -   lr_scheduler: one_cycle
+2025-09-18 15:36:36,099 - INFO -   warmup_enabled: True
+2025-09-18 15:36:36,099 - INFO -   basal_mapping_strategy: phase
+2025-09-18 15:36:36,099 - INFO -   learning_rate: 0.001
+2025-09-18 15:36:36,099 - INFO -   phase_enabled: True
+2025-09-18 15:36:36,099 - INFO - ============================================================
+2025-09-18 15:36:36,099 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_153636 name=test_run_20250918_153636 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_153636] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase
+2025-09-18 15:36:36,099 - INFO - Executing training command...
+2025-09-18 15:50:38,555 - INFO - Training completed successfully!
+2025-09-18 15:50:38,559 - INFO - Evaluating model in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_153636
+2025-09-18 15:50:38,593 - INFO - Using checkpoint directory: /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_153636/test_run_20250918_153636
+2025-09-18 15:50:38,593 - INFO - Preprocessing holdout dataset: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented.h5
+2025-09-18 15:50:38,593 - INFO - Output will be saved to: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-18 15:50:38,593 - INFO - Running preprocessing: python -m state tx preprocess_infer --adata /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented.h5 --output /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5 --control_condition non-targeting --pert_col target_gene --seed 42
+2025-09-18 15:50:38,593 - INFO - This may take several minutes...
+2025-09-18 15:51:17,339 - INFO - Preprocessing: /home/hackerman/anaconda3/envs/atlas/lib/python3.11/site-packages/scipy/sparse/_index.py:201: SparseEfficiencyWarning: Changing the sparsity structure of a csr_matrix is expensive. lil and dok are more efficient.
+2025-09-18 15:51:17,339 - INFO - Preprocessing: self._set_arrayXarray_sparse(i, j, x)
+2025-09-18 16:03:02,161 - INFO - Holdout preprocessing completed successfully!
+2025-09-18 16:03:02,161 - INFO - Using preprocessed holdout data: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-18 16:03:02,161 - INFO - Running evaluation...
+2025-09-18 16:28:35,660 - INFO - Evaluation completed successfully!
+2025-09-18 16:28:35,661 - WARNING - No agg_results.csv found in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_153636/eval_results
+2025-09-18 16:28:35,661 - ERROR - Pipeline failed: Failed to extract score
+2025-09-18 16:28:35,661 - ERROR - Total test time: 3119.56 seconds
+2025-09-18 16:28:35,661 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 16:41:05,502 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 16:41:05,502 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 16:41:05,502 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 16:41:05,523 - INFO - 
+============================================================
+2025-09-18 16:41:05,523 - INFO - Running training with parameters:
+2025-09-18 16:41:05,523 - INFO -   input_dropout: 0.15
+2025-09-18 16:41:05,523 - INFO -   loss_fn: energy
+2025-09-18 16:41:05,524 - INFO -   lr_scheduler: one_cycle
+2025-09-18 16:41:05,524 - INFO -   warmup_enabled: True
+2025-09-18 16:41:05,524 - INFO -   basal_mapping_strategy: phase
+2025-09-18 16:41:05,524 - INFO -   learning_rate: 0.001
+2025-09-18 16:41:05,524 - INFO -   phase_enabled: True
+2025-09-18 16:41:05,524 - INFO - ============================================================
+2025-09-18 16:41:05,524 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_164105 name=test_run_20250918_164105 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_164105] use_wandb=true training=with_warmup training.loss_fn=energy +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 16:41:05,524 - INFO - Executing training command...
+2025-09-18 16:46:06,545 - ERROR - Training timed out!
+2025-09-18 16:46:06,545 - ERROR - Pipeline failed: Training timed out
+2025-09-18 16:46:06,546 - ERROR - Total test time: 301.04 seconds
+2025-09-18 16:46:06,546 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 16:52:20,091 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 16:52:20,091 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 16:52:20,092 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 16:52:20,116 - INFO - 
+============================================================
+2025-09-18 16:52:20,116 - INFO - Running training with parameters:
+2025-09-18 16:52:20,116 - INFO -   input_dropout: 0.15
+2025-09-18 16:52:20,116 - INFO -   loss_fn: energy
+2025-09-18 16:52:20,116 - INFO -   lr_scheduler: one_cycle
+2025-09-18 16:52:20,116 - INFO -   warmup_enabled: True
+2025-09-18 16:52:20,116 - INFO -   basal_mapping_strategy: phase
+2025-09-18 16:52:20,116 - INFO -   learning_rate: 0.001
+2025-09-18 16:52:20,116 - INFO -   phase_enabled: True
+2025-09-18 16:52:20,116 - INFO - ============================================================
+2025-09-18 16:52:20,117 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165220 name=test_run_20250918_165220 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_165220] use_wandb=true training=with_warmup training.loss_fn=energy +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 16:52:20,117 - INFO - Executing training command...
+2025-09-18 16:54:31,502 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165220', 'name=test_run_20250918_165220', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_165220]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' died with <Signals.SIGKILL: 9>.
+2025-09-18 16:54:31,513 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165220', 'name=test_run_20250918_165220', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_165220]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', '+model.kwargs.lr_policy_config.name=one_cycle', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' died with <Signals.SIGKILL: 9>.
+2025-09-18 16:54:31,515 - ERROR - Total test time: 131.42 seconds
+2025-09-18 16:54:31,515 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 16:59:17,967 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 16:59:17,967 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 16:59:17,967 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 16:59:18,035 - INFO - 
+============================================================
+2025-09-18 16:59:18,035 - INFO - Running training with parameters:
+2025-09-18 16:59:18,035 - INFO -   input_dropout: 0.15
+2025-09-18 16:59:18,035 - INFO -   loss_fn: energy
+2025-09-18 16:59:18,035 - INFO -   lr_scheduler: one_cycle
+2025-09-18 16:59:18,035 - INFO -   warmup_enabled: True
+2025-09-18 16:59:18,035 - INFO -   basal_mapping_strategy: phase
+2025-09-18 16:59:18,035 - INFO -   learning_rate: 0.001
+2025-09-18 16:59:18,035 - INFO -   phase_enabled: True
+2025-09-18 16:59:18,035 - INFO - ============================================================
+2025-09-18 16:59:18,035 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165917 name=test_run_20250918_165917 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_165917] use_wandb=true training=with_warmup training.loss_fn=energy +model.kwargs.lr_policy_config.name=one_cycle training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 16:59:18,035 - INFO - Executing training command...
+2025-09-18 17:12:56,442 - INFO - Training completed successfully!
+2025-09-18 17:12:56,445 - INFO - Evaluating model in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165917
+2025-09-18 17:12:56,470 - INFO - Using checkpoint directory: /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165917/test_run_20250918_165917
+2025-09-18 17:12:56,470 - INFO - Preprocessed holdout file already exists: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-18 17:12:56,470 - INFO - Using preprocessed holdout data: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-18 17:12:56,470 - INFO - Running evaluation...
+2025-09-18 17:25:56,795 - INFO - Evaluation completed successfully!
+2025-09-18 17:25:56,796 - INFO - Reading results from /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_165917/eval_results/cell-eval-test_run_20250918_165917_competition_train_h1_holdout_phase_augmented_preprocessed_dataloader_final/agg_results.csv
+2025-09-18 17:25:56,802 - INFO - CSV contents:
+    statistic  overlap_at_N        mae  discrimination_score_l1
+0       count          30.0  30.000000                30.000000
+1  null_count           0.0   0.000000                 0.000000
+2        mean           0.0   0.096744                 0.520000
+3         std           0.0   0.004778                 0.297448
+4         min           0.0   0.092314                 0.033333
+5         25%           0.0   0.093154                 0.266667
+6         50%           0.0   0.095145                 0.533333
+7         75%           0.0   0.099041                 0.766667
+8         max           0.0   0.109177                 1.000000
+2025-09-18 17:25:56,803 - INFO - Extracted discrimination_score_l1: 0.52
+2025-09-18 17:25:56,803 - INFO - Pipeline completed successfully! Score: 0.52
+2025-09-18 17:25:56,803 - INFO - 
+SUCCESS! Extracted score: 0.52
+2025-09-18 17:25:56,803 - INFO - Parameters used (all NON-DEFAULT): {'input_dropout': 0.15, 'loss_fn': 'energy', 'lr_scheduler': 'one_cycle', 'warmup_enabled': True, 'basal_mapping_strategy': 'phase', 'learning_rate': 0.001, 'phase_enabled': True}
+2025-09-18 17:25:56,803 - INFO - Output directory: test_run_20250918_165917
+2025-09-18 17:25:56,803 - INFO - Message: Pipeline completed successfully
+2025-09-18 17:25:56,803 - INFO - Total test time: 1598.84 seconds
+2025-09-18 17:25:56,803 - INFO - 
+NON-DEFAULT SETTINGS USED:
+2025-09-18 17:25:56,803 - INFO -   - input_dropout: 0.15 (enabled, not 0.0)
+2025-09-18 17:25:56,803 - INFO -   - loss_fn: energy (energy, not mse)
+2025-09-18 17:25:56,803 - INFO -   - lr_scheduler: one_cycle (one_cycle, not cosine_annealing)
+2025-09-18 17:25:56,803 - INFO -   - warmup_enabled: True (enabled, not disabled)
+2025-09-18 17:25:56,803 - INFO -   - basal_mapping_strategy: phase (phase, not batch)
+2025-09-18 17:25:56,804 - INFO -   - learning_rate: 0.001 (0.001, not 0.0001)
+2025-09-18 17:25:56,804 - INFO -   - phase_enabled: True (enabled, not disabled)
+2025-09-18 17:25:56,804 - INFO - 
+✅ Test passed! The pipeline works correctly.
+2025-09-18 17:40:29,389 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:40:29,389 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:40:29,389 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:40:29,389 - INFO - 
+============================================================
+2025-09-18 17:40:29,389 - INFO - Running training with parameters:
+2025-09-18 17:40:29,389 - INFO -   input_dropout: 0.15
+2025-09-18 17:40:29,389 - INFO -   loss_fn: energy
+2025-09-18 17:40:29,389 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:40:29,389 - INFO -   warmup_enabled: True
+2025-09-18 17:40:29,390 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:40:29,390 - INFO -   learning_rate: 0.001
+2025-09-18 17:40:29,390 - INFO -   phase_enabled: True
+2025-09-18 17:40:29,390 - INFO - ============================================================
+2025-09-18 17:40:29,390 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174029 name=test_run_20250918_174029 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_174029] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:40:29,390 - INFO - Executing training command...
+2025-09-18 17:43:49,586 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:43:49,586 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:43:49,586 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:43:49,607 - INFO - 
+============================================================
+2025-09-18 17:43:49,608 - INFO - Running training with parameters:
+2025-09-18 17:43:49,608 - INFO -   input_dropout: 0.15
+2025-09-18 17:43:49,608 - INFO -   loss_fn: energy
+2025-09-18 17:43:49,608 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:43:49,608 - INFO -   warmup_enabled: True
+2025-09-18 17:43:49,608 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:43:49,608 - INFO -   learning_rate: 0.001
+2025-09-18 17:43:49,608 - INFO -   phase_enabled: True
+2025-09-18 17:43:49,608 - INFO - ============================================================
+2025-09-18 17:43:49,608 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174349 name=test_run_20250918_174349 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_174349] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:43:49,608 - INFO - Executing training command...
+2025-09-18 17:45:55,768 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:45:55,768 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:45:55,768 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:45:55,768 - INFO - 
+============================================================
+2025-09-18 17:45:55,768 - INFO - Running training with parameters:
+2025-09-18 17:45:55,768 - INFO -   input_dropout: 0.15
+2025-09-18 17:45:55,768 - INFO -   loss_fn: energy
+2025-09-18 17:45:55,768 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:45:55,768 - INFO -   warmup_enabled: True
+2025-09-18 17:45:55,768 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:45:55,768 - INFO -   learning_rate: 0.001
+2025-09-18 17:45:55,768 - INFO -   phase_enabled: True
+2025-09-18 17:45:55,768 - INFO - ============================================================
+2025-09-18 17:45:55,769 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174555 name=test_run_20250918_174555 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_174555] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:45:55,769 - INFO - Executing training command...
+2025-09-18 17:47:38,419 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:47:38,419 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:47:38,419 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:47:38,447 - INFO - 
+============================================================
+2025-09-18 17:47:38,447 - INFO - Running training with parameters:
+2025-09-18 17:47:38,447 - INFO -   input_dropout: 0.15
+2025-09-18 17:47:38,447 - INFO -   loss_fn: energy
+2025-09-18 17:47:38,447 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:47:38,447 - INFO -   warmup_enabled: True
+2025-09-18 17:47:38,447 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:47:38,447 - INFO -   learning_rate: 0.001
+2025-09-18 17:47:38,447 - INFO -   phase_enabled: True
+2025-09-18 17:47:38,447 - INFO - ============================================================
+2025-09-18 17:47:38,447 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174738 name=test_run_20250918_174738 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_174738] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:47:38,447 - INFO - Executing training command...
+2025-09-18 17:49:23,897 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:49:23,897 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:49:23,897 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:49:23,897 - INFO - 
+============================================================
+2025-09-18 17:49:23,897 - INFO - Running training with parameters:
+2025-09-18 17:49:23,897 - INFO -   input_dropout: 0.15
+2025-09-18 17:49:23,897 - INFO -   loss_fn: energy
+2025-09-18 17:49:23,897 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:49:23,897 - INFO -   warmup_enabled: True
+2025-09-18 17:49:23,897 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:49:23,897 - INFO -   learning_rate: 0.001
+2025-09-18 17:49:23,898 - INFO -   phase_enabled: True
+2025-09-18 17:49:23,898 - INFO - ============================================================
+2025-09-18 17:49:23,898 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174923 name=test_run_20250918_174923 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_174923] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:49:23,898 - INFO - Executing training command...
+2025-09-18 17:52:02,080 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174923', 'name=test_run_20250918_174923', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_174923]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' died with <Signals.SIGKILL: 9>.
+2025-09-18 17:52:02,082 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_174923', 'name=test_run_20250918_174923', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_174923]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' died with <Signals.SIGKILL: 9>.
+2025-09-18 17:52:02,082 - ERROR - Total test time: 158.18 seconds
+2025-09-18 17:52:02,082 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-18 17:54:14,789 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:54:14,790 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:54:14,790 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:54:14,841 - INFO - 
+============================================================
+2025-09-18 17:54:14,841 - INFO - Running training with parameters:
+2025-09-18 17:54:14,841 - INFO -   input_dropout: 0.15
+2025-09-18 17:54:14,842 - INFO -   loss_fn: energy
+2025-09-18 17:54:14,842 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:54:14,842 - INFO -   warmup_enabled: True
+2025-09-18 17:54:14,842 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:54:14,842 - INFO -   learning_rate: 0.001
+2025-09-18 17:54:14,842 - INFO -   phase_enabled: True
+2025-09-18 17:54:14,842 - INFO - ============================================================
+2025-09-18 17:54:14,842 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_175414 name=test_run_20250918_175414 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_175414] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:54:14,842 - INFO - Executing training command...
+2025-09-18 17:55:42,289 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:55:42,289 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:55:42,289 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:55:42,289 - INFO - 
+============================================================
+2025-09-18 17:55:42,289 - INFO - Running training with parameters:
+2025-09-18 17:55:42,289 - INFO -   input_dropout: 0.15
+2025-09-18 17:55:42,289 - INFO -   loss_fn: energy
+2025-09-18 17:55:42,289 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:55:42,289 - INFO -   warmup_enabled: True
+2025-09-18 17:55:42,289 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:55:42,289 - INFO -   learning_rate: 0.001
+2025-09-18 17:55:42,289 - INFO -   phase_enabled: True
+2025-09-18 17:55:42,289 - INFO - ============================================================
+2025-09-18 17:55:42,289 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_175542 name=test_run_20250918_175542 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_175542] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:55:42,289 - INFO - Executing training command...
+2025-09-18 17:58:12,670 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 17:58:12,670 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 17:58:12,670 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 17:58:12,671 - INFO - 
+============================================================
+2025-09-18 17:58:12,671 - INFO - Running training with parameters:
+2025-09-18 17:58:12,671 - INFO -   input_dropout: 0.15
+2025-09-18 17:58:12,671 - INFO -   loss_fn: energy
+2025-09-18 17:58:12,671 - INFO -   lr_scheduler: one_cycle
+2025-09-18 17:58:12,671 - INFO -   warmup_enabled: True
+2025-09-18 17:58:12,671 - INFO -   basal_mapping_strategy: phase
+2025-09-18 17:58:12,671 - INFO -   learning_rate: 0.001
+2025-09-18 17:58:12,671 - INFO -   phase_enabled: True
+2025-09-18 17:58:12,671 - INFO - ============================================================
+2025-09-18 17:58:12,671 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_175812 name=test_run_20250918_175812 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_175812] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 17:58:12,671 - INFO - Executing training command...
+2025-09-18 18:01:49,974 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-18 18:01:49,974 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-18 18:01:49,974 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-18 18:01:49,975 - INFO - 
+============================================================
+2025-09-18 18:01:49,975 - INFO - Running training with parameters:
+2025-09-18 18:01:49,975 - INFO -   input_dropout: 0.15
+2025-09-18 18:01:49,975 - INFO -   loss_fn: energy
+2025-09-18 18:01:49,975 - INFO -   lr_scheduler: one_cycle
+2025-09-18 18:01:49,975 - INFO -   warmup_enabled: True
+2025-09-18 18:01:49,975 - INFO -   basal_mapping_strategy: phase
+2025-09-18 18:01:49,975 - INFO -   learning_rate: 0.001
+2025-09-18 18:01:49,975 - INFO -   phase_enabled: True
+2025-09-18 18:01:49,975 - INFO - ============================================================
+2025-09-18 18:01:49,975 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_180149 name=test_run_20250918_180149 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250918_180149] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-18 18:01:49,975 - INFO - Executing training command...
+2025-09-18 18:02:54,242 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_180149', 'name=test_run_20250918_180149', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_180149]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 18:02:54,242 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250918_180149', 'name=test_run_20250918_180149', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250918_180149]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-18 18:02:54,242 - ERROR - Total test time: 64.27 seconds
+2025-09-18 18:02:54,242 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-19 07:37:37,863 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 07:37:37,863 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 07:37:37,863 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 07:37:37,864 - INFO - 
+============================================================
+2025-09-19 07:37:37,864 - INFO - Running training with parameters:
+2025-09-19 07:37:37,864 - INFO -   input_dropout: 0.15
+2025-09-19 07:37:37,864 - INFO -   loss_fn: energy
+2025-09-19 07:37:37,864 - INFO -   lr_scheduler: one_cycle
+2025-09-19 07:37:37,864 - INFO -   warmup_enabled: True
+2025-09-19 07:37:37,864 - INFO -   basal_mapping_strategy: phase
+2025-09-19 07:37:37,864 - INFO -   learning_rate: 0.001
+2025-09-19 07:37:37,864 - INFO -   phase_enabled: True
+2025-09-19 07:37:37,864 - INFO - ============================================================
+2025-09-19 07:37:37,864 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_073737 name=test_run_20250919_073737 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_073737] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 07:37:37,864 - INFO - Executing training command...
+2025-09-19 07:51:57,533 - INFO - Training completed successfully!
+2025-09-19 07:51:57,537 - INFO - Evaluating model in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_073737
+2025-09-19 07:51:57,576 - INFO - Using checkpoint directory: /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_073737/test_run_20250919_073737
+2025-09-19 07:51:57,577 - INFO - Preprocessed holdout file already exists: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-19 07:51:57,577 - INFO - Using preprocessed holdout data: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-19 07:51:57,577 - INFO - Running evaluation...
+2025-09-19 07:55:43,412 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 07:55:43,412 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 07:55:43,412 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 07:55:43,439 - INFO - 
+============================================================
+2025-09-19 07:55:43,439 - INFO - Running training with parameters:
+2025-09-19 07:55:43,439 - INFO -   input_dropout: 0.15
+2025-09-19 07:55:43,439 - INFO -   loss_fn: energy
+2025-09-19 07:55:43,439 - INFO -   lr_scheduler: one_cycle
+2025-09-19 07:55:43,439 - INFO -   warmup_enabled: True
+2025-09-19 07:55:43,439 - INFO -   basal_mapping_strategy: phase
+2025-09-19 07:55:43,439 - INFO -   learning_rate: 0.001
+2025-09-19 07:55:43,439 - INFO -   phase_enabled: True
+2025-09-19 07:55:43,439 - INFO - ============================================================
+2025-09-19 07:55:43,440 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_075543 name=test_run_20250919_075543 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_075543] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 07:55:43,440 - INFO - Executing training command...
+2025-09-19 08:01:41,701 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 08:01:41,701 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 08:01:41,702 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 08:01:41,702 - INFO - 
+============================================================
+2025-09-19 08:01:41,702 - INFO - Running training with parameters:
+2025-09-19 08:01:41,702 - INFO -   input_dropout: 0.15
+2025-09-19 08:01:41,702 - INFO -   loss_fn: energy
+2025-09-19 08:01:41,702 - INFO -   lr_scheduler: one_cycle
+2025-09-19 08:01:41,702 - INFO -   warmup_enabled: True
+2025-09-19 08:01:41,702 - INFO -   basal_mapping_strategy: phase
+2025-09-19 08:01:41,702 - INFO -   learning_rate: 0.001
+2025-09-19 08:01:41,702 - INFO -   phase_enabled: True
+2025-09-19 08:01:41,702 - INFO - ============================================================
+2025-09-19 08:01:41,702 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_080141 name=test_run_20250919_080141 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_080141] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 08:01:41,702 - INFO - Executing training command...
+2025-09-19 08:08:38,186 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 08:08:38,186 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 08:08:38,186 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 08:08:38,186 - INFO - 
+============================================================
+2025-09-19 08:08:38,186 - INFO - Running training with parameters:
+2025-09-19 08:08:38,186 - INFO -   input_dropout: 0.15
+2025-09-19 08:08:38,186 - INFO -   loss_fn: energy
+2025-09-19 08:08:38,186 - INFO -   lr_scheduler: one_cycle
+2025-09-19 08:08:38,186 - INFO -   warmup_enabled: True
+2025-09-19 08:08:38,187 - INFO -   basal_mapping_strategy: phase
+2025-09-19 08:08:38,187 - INFO -   learning_rate: 0.001
+2025-09-19 08:08:38,187 - INFO -   phase_enabled: True
+2025-09-19 08:08:38,187 - INFO - ============================================================
+2025-09-19 08:08:38,187 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_080838 name=test_run_20250919_080838 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_080838] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 08:08:38,187 - INFO - Executing training command...
+2025-09-19 08:09:10,953 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_080838', 'name=test_run_20250919_080838', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_080838]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:09:10,954 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_080838', 'name=test_run_20250919_080838', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_080838]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:09:10,954 - ERROR - Total test time: 32.77 seconds
+2025-09-19 08:09:10,954 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-19 08:10:59,010 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 08:10:59,010 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 08:10:59,011 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 08:10:59,011 - INFO - 
+============================================================
+2025-09-19 08:10:59,011 - INFO - Running training with parameters:
+2025-09-19 08:10:59,011 - INFO -   input_dropout: 0.15
+2025-09-19 08:10:59,011 - INFO -   loss_fn: energy
+2025-09-19 08:10:59,011 - INFO -   lr_scheduler: one_cycle
+2025-09-19 08:10:59,011 - INFO -   warmup_enabled: True
+2025-09-19 08:10:59,011 - INFO -   basal_mapping_strategy: phase
+2025-09-19 08:10:59,011 - INFO -   learning_rate: 0.001
+2025-09-19 08:10:59,011 - INFO -   phase_enabled: True
+2025-09-19 08:10:59,011 - INFO - ============================================================
+2025-09-19 08:10:59,011 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_081059 name=test_run_20250919_081059 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_081059] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 08:10:59,011 - INFO - Executing training command...
+2025-09-19 08:12:05,875 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_081059', 'name=test_run_20250919_081059', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_081059]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:12:05,875 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_081059', 'name=test_run_20250919_081059', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_081059]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:12:05,876 - ERROR - Total test time: 66.87 seconds
+2025-09-19 08:12:05,876 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-19 08:15:37,624 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 08:15:37,624 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 08:15:37,624 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 08:15:37,624 - INFO - 
+============================================================
+2025-09-19 08:15:37,624 - INFO - Running training with parameters:
+2025-09-19 08:15:37,624 - INFO -   input_dropout: 0.15
+2025-09-19 08:15:37,624 - INFO -   loss_fn: energy
+2025-09-19 08:15:37,624 - INFO -   lr_scheduler: one_cycle
+2025-09-19 08:15:37,624 - INFO -   warmup_enabled: True
+2025-09-19 08:15:37,625 - INFO -   basal_mapping_strategy: phase
+2025-09-19 08:15:37,625 - INFO -   learning_rate: 0.001
+2025-09-19 08:15:37,625 - INFO -   phase_enabled: True
+2025-09-19 08:15:37,625 - INFO - ============================================================
+2025-09-19 08:15:37,625 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_081537 name=test_run_20250919_081537 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_081537] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 08:15:37,625 - INFO - Executing training command...
+2025-09-19 08:16:40,602 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_081537', 'name=test_run_20250919_081537', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_081537]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:16:40,602 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_081537', 'name=test_run_20250919_081537', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_081537]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:16:40,602 - ERROR - Total test time: 62.98 seconds
+2025-09-19 08:16:40,602 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-19 08:51:49,373 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 08:51:49,373 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 08:51:49,373 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 08:51:49,373 - INFO - 
+============================================================
+2025-09-19 08:51:49,373 - INFO - Running training with parameters:
+2025-09-19 08:51:49,373 - INFO -   input_dropout: 0.15
+2025-09-19 08:51:49,373 - INFO -   loss_fn: energy
+2025-09-19 08:51:49,373 - INFO -   lr_scheduler: one_cycle
+2025-09-19 08:51:49,373 - INFO -   warmup_enabled: True
+2025-09-19 08:51:49,373 - INFO -   basal_mapping_strategy: phase
+2025-09-19 08:51:49,373 - INFO -   learning_rate: 0.001
+2025-09-19 08:51:49,373 - INFO -   phase_enabled: True
+2025-09-19 08:51:49,374 - INFO - ============================================================
+2025-09-19 08:51:49,374 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_085149 name=test_run_20250919_085149 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_085149] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 08:51:49,374 - INFO - Executing training command...
+2025-09-19 08:55:21,177 - ERROR - Training failed with error: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_085149', 'name=test_run_20250919_085149', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_085149]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:55:21,177 - ERROR - Pipeline failed: Training failed: Command '['python', '-m', 'state', 'tx', 'train', 'data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml', 'data.kwargs.num_workers=8', 'data.kwargs.batch_col=batch_var', 'data.kwargs.pert_col=target_gene', 'data.kwargs.cell_type_key=cell_type', 'data.kwargs.control_pert=non-targeting', 'data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt', 'data.kwargs.esm_perts_only=true', 'training.max_steps=50', 'training.ckpt_every_n_steps=10', 'training.val_freq=10', 'model=state_sm', 'output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_085149', 'name=test_run_20250919_085149', 'validations.diff_exp.enable=true', 'validations.perturbation.enable=true', 'wandb.tags=[state_sm,bo,test_run_20250919_085149]', 'use_wandb=true', 'training=with_warmup', 'training.loss_fn=energy', 'training.lr=0.001', '+model.kwargs.lr_policy_config.name=one_cycle', '+model.kwargs.lr_policy_config.max_lr=0.001', 'training.warmup.enabled=true', '+model.kwargs.input_dropout=0.15', 'data.kwargs.basal_mapping_strategy=phase', 'model.kwargs.phase=true', 'data.kwargs.phase=true']' returned non-zero exit status 1.
+2025-09-19 08:55:21,177 - ERROR - Total test time: 211.80 seconds
+2025-09-19 08:55:21,177 - ERROR - 
+❌ Test failed! Check the errors above.
+2025-09-19 08:55:47,732 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 08:55:47,733 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 08:55:47,733 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 08:55:47,762 - INFO - 
+============================================================
+2025-09-19 08:55:47,762 - INFO - Running training with parameters:
+2025-09-19 08:55:47,762 - INFO -   input_dropout: 0.15
+2025-09-19 08:55:47,762 - INFO -   loss_fn: energy
+2025-09-19 08:55:47,762 - INFO -   lr_scheduler: one_cycle
+2025-09-19 08:55:47,762 - INFO -   warmup_enabled: True
+2025-09-19 08:55:47,762 - INFO -   basal_mapping_strategy: phase
+2025-09-19 08:55:47,762 - INFO -   learning_rate: 0.001
+2025-09-19 08:55:47,762 - INFO -   phase_enabled: True
+2025-09-19 08:55:47,762 - INFO - ============================================================
+2025-09-19 08:55:47,762 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_085547 name=test_run_20250919_085547 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_085547] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 08:55:47,762 - INFO - Executing training command...
+2025-09-19 09:04:53,223 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 09:04:53,223 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 09:04:53,223 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 09:04:53,239 - INFO - 
+============================================================
+2025-09-19 09:04:53,239 - INFO - Running training with parameters:
+2025-09-19 09:04:53,239 - INFO -   input_dropout: 0.15
+2025-09-19 09:04:53,239 - INFO -   loss_fn: energy
+2025-09-19 09:04:53,239 - INFO -   lr_scheduler: one_cycle
+2025-09-19 09:04:53,239 - INFO -   warmup_enabled: True
+2025-09-19 09:04:53,239 - INFO -   basal_mapping_strategy: phase
+2025-09-19 09:04:53,239 - INFO -   learning_rate: 0.001
+2025-09-19 09:04:53,239 - INFO -   phase_enabled: True
+2025-09-19 09:04:53,239 - INFO - ============================================================
+2025-09-19 09:04:53,239 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_090453 name=test_run_20250919_090453 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_090453] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 09:04:53,239 - INFO - Executing training command...
+2025-09-19 09:10:45,979 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 09:10:45,979 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 09:10:45,979 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 09:10:46,009 - INFO - 
+============================================================
+2025-09-19 09:10:46,009 - INFO - Running training with parameters:
+2025-09-19 09:10:46,009 - INFO -   input_dropout: 0.15
+2025-09-19 09:10:46,009 - INFO -   loss_fn: energy
+2025-09-19 09:10:46,009 - INFO -   lr_scheduler: one_cycle
+2025-09-19 09:10:46,009 - INFO -   warmup_enabled: True
+2025-09-19 09:10:46,010 - INFO -   basal_mapping_strategy: phase
+2025-09-19 09:10:46,010 - INFO -   learning_rate: 0.001
+2025-09-19 09:10:46,010 - INFO -   phase_enabled: True
+2025-09-19 09:10:46,010 - INFO - ============================================================
+2025-09-19 09:10:46,010 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_091045 name=test_run_20250919_091045 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_091045] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 09:10:46,010 - INFO - Executing training command...
+2025-09-19 09:11:52,491 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 09:11:52,491 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 09:11:52,491 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 09:11:52,491 - INFO - 
+============================================================
+2025-09-19 09:11:52,491 - INFO - Running training with parameters:
+2025-09-19 09:11:52,491 - INFO -   input_dropout: 0.15
+2025-09-19 09:11:52,491 - INFO -   loss_fn: energy
+2025-09-19 09:11:52,491 - INFO -   lr_scheduler: one_cycle
+2025-09-19 09:11:52,491 - INFO -   warmup_enabled: True
+2025-09-19 09:11:52,491 - INFO -   basal_mapping_strategy: phase
+2025-09-19 09:11:52,491 - INFO -   learning_rate: 0.001
+2025-09-19 09:11:52,492 - INFO -   phase_enabled: True
+2025-09-19 09:11:52,492 - INFO - ============================================================
+2025-09-19 09:11:52,492 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_091152 name=test_run_20250919_091152 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_091152] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 09:11:52,492 - INFO - Executing training command...
+2025-09-19 09:14:54,584 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 09:14:54,584 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 09:14:54,584 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 09:14:54,584 - INFO - 
+============================================================
+2025-09-19 09:14:54,584 - INFO - Running training with parameters:
+2025-09-19 09:14:54,584 - INFO -   input_dropout: 0.15
+2025-09-19 09:14:54,584 - INFO -   loss_fn: energy
+2025-09-19 09:14:54,584 - INFO -   lr_scheduler: one_cycle
+2025-09-19 09:14:54,585 - INFO -   warmup_enabled: True
+2025-09-19 09:14:54,585 - INFO -   basal_mapping_strategy: phase
+2025-09-19 09:14:54,585 - INFO -   learning_rate: 0.001
+2025-09-19 09:14:54,585 - INFO -   phase_enabled: True
+2025-09-19 09:14:54,585 - INFO - ============================================================
+2025-09-19 09:14:54,585 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_091454 name=test_run_20250919_091454 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_091454] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 09:14:54,585 - INFO - Executing training command...
+2025-09-19 09:29:56,813 - INFO - Training completed successfully!
+2025-09-19 09:29:56,814 - INFO - Evaluating model in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_091454
+2025-09-19 09:29:56,840 - INFO - Using checkpoint directory: /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_091454/test_run_20250919_091454
+2025-09-19 09:29:56,840 - INFO - Preprocessed holdout file already exists: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-19 09:29:56,840 - INFO - Using preprocessed holdout data: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-19 09:29:56,841 - INFO - Running evaluation...
+2025-09-19 09:43:38,059 - INFO - Evaluation completed successfully!
+2025-09-19 09:43:38,060 - INFO - Reading results from /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_091454/eval_results/cell-eval-test_run_20250919_091454_competition_train_h1_holdout_phase_augmented_preprocessed_dataloader_final/agg_results.csv
+2025-09-19 09:43:38,066 - INFO - CSV contents:
+    statistic  overlap_at_N        mae  discrimination_score_l1
+0       count          30.0  30.000000                30.000000
+1  null_count           0.0   0.000000                 0.000000
+2        mean           0.0   0.144818                 0.520000
+3         std           0.0   0.006496                 0.294730
+4         min           0.0   0.137362                 0.033333
+5         25%           0.0   0.140357                 0.266667
+6         50%           0.0   0.142577                 0.566667
+7         75%           0.0   0.149160                 0.733333
+8         max           0.0   0.163478                 1.000000
+2025-09-19 09:43:38,067 - INFO - Extracted discrimination_score_l1: 0.52
+2025-09-19 09:43:38,067 - INFO - Pipeline completed successfully! Score: 0.52
+2025-09-19 09:43:38,067 - INFO - 
+SUCCESS! Extracted score: 0.52
+2025-09-19 09:43:38,067 - INFO - Parameters used (all NON-DEFAULT): {'input_dropout': 0.15, 'loss_fn': 'energy', 'lr_scheduler': 'one_cycle', 'warmup_enabled': True, 'basal_mapping_strategy': 'phase', 'learning_rate': 0.001, 'phase_enabled': True}
+2025-09-19 09:43:38,067 - INFO - Output directory: test_run_20250919_091454
+2025-09-19 09:43:38,067 - INFO - Message: Pipeline completed successfully
+2025-09-19 09:43:38,067 - INFO - Total test time: 1723.48 seconds
+2025-09-19 09:43:38,067 - INFO - 
+NON-DEFAULT SETTINGS USED:
+2025-09-19 09:43:38,067 - INFO -   - input_dropout: 0.15 (enabled, not 0.0)
+2025-09-19 09:43:38,067 - INFO -   - loss_fn: energy (energy, not mse)
+2025-09-19 09:43:38,067 - INFO -   - lr_scheduler: one_cycle (one_cycle, not cosine_annealing)
+2025-09-19 09:43:38,068 - INFO -   - warmup_enabled: True (enabled, not disabled)
+2025-09-19 09:43:38,068 - INFO -   - basal_mapping_strategy: phase (phase, not batch)
+2025-09-19 09:43:38,068 - INFO -   - learning_rate: 0.001 (0.001, not 0.0001)
+2025-09-19 09:43:38,068 - INFO -   - phase_enabled: True (enabled, not disabled)
+2025-09-19 09:43:38,068 - INFO - 
+✅ Test passed! The pipeline works correctly.
+2025-09-19 10:07:06,277 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:07:06,277 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:07:06,277 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:07:06,278 - INFO - 
+============================================================
+2025-09-19 10:07:06,279 - INFO - Running training with parameters:
+2025-09-19 10:07:06,279 - INFO -   input_dropout: 0.15
+2025-09-19 10:07:06,279 - INFO -   loss_fn: energy
+2025-09-19 10:07:06,279 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:07:06,279 - INFO -   warmup_enabled: True
+2025-09-19 10:07:06,279 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:07:06,279 - INFO -   learning_rate: 0.001
+2025-09-19 10:07:06,279 - INFO -   phase_enabled: True
+2025-09-19 10:07:06,279 - INFO - ============================================================
+2025-09-19 10:07:06,279 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_100706 name=test_run_20250919_100706 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_100706] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:07:06,279 - INFO - Executing training command...
+2025-09-19 10:13:42,003 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:13:42,003 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:13:42,003 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:13:42,004 - INFO - 
+============================================================
+2025-09-19 10:13:42,004 - INFO - Running training with parameters:
+2025-09-19 10:13:42,004 - INFO -   input_dropout: 0.15
+2025-09-19 10:13:42,004 - INFO -   loss_fn: energy
+2025-09-19 10:13:42,004 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:13:42,004 - INFO -   warmup_enabled: True
+2025-09-19 10:13:42,004 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:13:42,004 - INFO -   learning_rate: 0.001
+2025-09-19 10:13:42,004 - INFO -   phase_enabled: True
+2025-09-19 10:13:42,004 - INFO - ============================================================
+2025-09-19 10:13:42,004 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_101342 name=test_run_20250919_101342 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_101342] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:13:42,004 - INFO - Executing training command...
+2025-09-19 10:23:51,144 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:23:51,145 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:23:51,145 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:23:51,175 - INFO - 
+============================================================
+2025-09-19 10:23:51,175 - INFO - Running training with parameters:
+2025-09-19 10:23:51,175 - INFO -   input_dropout: 0.15
+2025-09-19 10:23:51,175 - INFO -   loss_fn: energy
+2025-09-19 10:23:51,175 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:23:51,175 - INFO -   warmup_enabled: True
+2025-09-19 10:23:51,175 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:23:51,175 - INFO -   learning_rate: 0.001
+2025-09-19 10:23:51,175 - INFO -   phase_enabled: True
+2025-09-19 10:23:51,175 - INFO - ============================================================
+2025-09-19 10:23:51,175 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_102351 name=test_run_20250919_102351 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_102351] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:23:51,175 - INFO - Executing training command...
+2025-09-19 10:27:39,863 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:27:39,864 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:27:39,864 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:27:39,864 - INFO - 
+============================================================
+2025-09-19 10:27:39,864 - INFO - Running training with parameters:
+2025-09-19 10:27:39,864 - INFO -   input_dropout: 0.15
+2025-09-19 10:27:39,865 - INFO -   loss_fn: energy
+2025-09-19 10:27:39,865 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:27:39,865 - INFO -   warmup_enabled: True
+2025-09-19 10:27:39,865 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:27:39,865 - INFO -   learning_rate: 0.001
+2025-09-19 10:27:39,865 - INFO -   phase_enabled: True
+2025-09-19 10:27:39,865 - INFO - ============================================================
+2025-09-19 10:27:39,865 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_102739 name=test_run_20250919_102739 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_102739] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:27:39,865 - INFO - Executing training command...
+2025-09-19 10:29:33,244 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:29:33,245 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:29:33,245 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:29:33,285 - INFO - 
+============================================================
+2025-09-19 10:29:33,285 - INFO - Running training with parameters:
+2025-09-19 10:29:33,285 - INFO -   input_dropout: 0.15
+2025-09-19 10:29:33,285 - INFO -   loss_fn: energy
+2025-09-19 10:29:33,285 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:29:33,285 - INFO -   warmup_enabled: True
+2025-09-19 10:29:33,285 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:29:33,285 - INFO -   learning_rate: 0.001
+2025-09-19 10:29:33,285 - INFO -   phase_enabled: True
+2025-09-19 10:29:33,286 - INFO - ============================================================
+2025-09-19 10:29:33,286 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_102933 name=test_run_20250919_102933 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_102933] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:29:33,286 - INFO - Executing training command...
+2025-09-19 10:31:34,733 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:31:34,734 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:31:34,734 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:31:34,734 - INFO - 
+============================================================
+2025-09-19 10:31:34,734 - INFO - Running training with parameters:
+2025-09-19 10:31:34,734 - INFO -   input_dropout: 0.15
+2025-09-19 10:31:34,734 - INFO -   loss_fn: energy
+2025-09-19 10:31:34,734 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:31:34,734 - INFO -   warmup_enabled: True
+2025-09-19 10:31:34,735 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:31:34,735 - INFO -   learning_rate: 0.001
+2025-09-19 10:31:34,735 - INFO -   phase_enabled: True
+2025-09-19 10:31:34,735 - INFO - ============================================================
+2025-09-19 10:31:34,735 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_103134 name=test_run_20250919_103134 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_103134] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:31:34,735 - INFO - Executing training command...
+2025-09-19 10:34:37,207 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:34:37,207 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:34:37,208 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:34:37,236 - INFO - 
+============================================================
+2025-09-19 10:34:37,236 - INFO - Running training with parameters:
+2025-09-19 10:34:37,236 - INFO -   input_dropout: 0.15
+2025-09-19 10:34:37,236 - INFO -   loss_fn: energy
+2025-09-19 10:34:37,236 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:34:37,236 - INFO -   warmup_enabled: True
+2025-09-19 10:34:37,236 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:34:37,236 - INFO -   learning_rate: 0.001
+2025-09-19 10:34:37,236 - INFO -   phase_enabled: True
+2025-09-19 10:34:37,236 - INFO - ============================================================
+2025-09-19 10:34:37,236 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_103437 name=test_run_20250919_103437 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_103437] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:34:37,236 - INFO - Executing training command...
+2025-09-19 10:35:31,507 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:35:31,507 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:35:31,507 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:35:31,508 - INFO - 
+============================================================
+2025-09-19 10:35:31,508 - INFO - Running training with parameters:
+2025-09-19 10:35:31,508 - INFO -   input_dropout: 0.15
+2025-09-19 10:35:31,508 - INFO -   loss_fn: energy
+2025-09-19 10:35:31,508 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:35:31,508 - INFO -   warmup_enabled: True
+2025-09-19 10:35:31,508 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:35:31,508 - INFO -   learning_rate: 0.001
+2025-09-19 10:35:31,508 - INFO -   phase_enabled: True
+2025-09-19 10:35:31,508 - INFO - ============================================================
+2025-09-19 10:35:31,508 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_103531 name=test_run_20250919_103531 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_103531] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:35:31,508 - INFO - Executing training command...
+2025-09-19 10:46:54,666 - INFO - Testing single training run with NON-DEFAULT parameters...
+2025-09-19 10:46:54,666 - INFO - Initialized TrainingRunner with max_steps=50, num_workers=8
+2025-09-19 10:46:54,666 - INFO - Using HDD for outputs: /media/hackerman/4TB_HDD/axonome_state_runs
+2025-09-19 10:46:54,687 - INFO - 
+============================================================
+2025-09-19 10:46:54,687 - INFO - Running training with parameters:
+2025-09-19 10:46:54,687 - INFO -   input_dropout: 0.15
+2025-09-19 10:46:54,687 - INFO -   loss_fn: energy
+2025-09-19 10:46:54,687 - INFO -   lr_scheduler: one_cycle
+2025-09-19 10:46:54,687 - INFO -   warmup_enabled: True
+2025-09-19 10:46:54,687 - INFO -   basal_mapping_strategy: phase
+2025-09-19 10:46:54,687 - INFO -   learning_rate: 0.001
+2025-09-19 10:46:54,687 - INFO -   phase_enabled: True
+2025-09-19 10:46:54,687 - INFO - ============================================================
+2025-09-19 10:46:54,687 - INFO - Training command: python -m state tx train data.kwargs.toml_config_path=/home/hackerman/Github/state/competition_support_set/withPhases/selected_h1_holdout.toml data.kwargs.num_workers=8 data.kwargs.batch_col=batch_var data.kwargs.pert_col=target_gene data.kwargs.cell_type_key=cell_type data.kwargs.control_pert=non-targeting data.kwargs.perturbation_features_file=/home/hackerman/Github/state/competition_support_set/ESM2_pert_features.pt data.kwargs.esm_perts_only=true training.max_steps=50 training.ckpt_every_n_steps=10 training.val_freq=10 model=state_sm output_dir=/media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_104654 name=test_run_20250919_104654 validations.diff_exp.enable=true validations.perturbation.enable=true wandb.tags=[state_sm,bo,test_run_20250919_104654] use_wandb=true training=with_warmup training.loss_fn=energy training.lr=0.001 +model.kwargs.lr_policy_config.name=one_cycle +model.kwargs.lr_policy_config.max_lr=0.001 training.warmup.enabled=true +model.kwargs.input_dropout=0.15 data.kwargs.basal_mapping_strategy=phase model.kwargs.phase=true data.kwargs.phase=true
+2025-09-19 10:46:54,687 - INFO - Executing training command...
+2025-09-19 11:01:54,779 - INFO - Training completed successfully!
+2025-09-19 11:01:54,782 - INFO - Evaluating model in /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_104654
+2025-09-19 11:01:54,808 - INFO - Using checkpoint directory: /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_104654/test_run_20250919_104654
+2025-09-19 11:01:54,809 - INFO - Preprocessed holdout file already exists: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-19 11:01:54,809 - INFO - Using preprocessed holdout data: /home/hackerman/Github/state/competition_support_set/withPhases/h1_holdout/competition_train_h1_holdout_phase_augmented_preprocessed.h5
+2025-09-19 11:01:54,809 - INFO - Running evaluation...
+2025-09-19 11:16:20,073 - INFO - Evaluation completed successfully!
+2025-09-19 11:16:20,073 - INFO - Reading results from /media/hackerman/4TB_HDD/axonome_state_runs/test_run_20250919_104654/eval_results/cell-eval-test_run_20250919_104654_competition_train_h1_holdout_phase_augmented_preprocessed_dataloader_final/agg_results.csv
+2025-09-19 11:16:20,083 - INFO - CSV contents:
+    statistic  overlap_at_N        mae  discrimination_score_l1
+0       count          30.0  30.000000                30.000000
+1  null_count           0.0   0.000000                 0.000000
+2        mean           0.0   0.144818                 0.520000
+3         std           0.0   0.006496                 0.294730
+4         min           0.0   0.137362                 0.033333
+5         25%           0.0   0.140357                 0.266667
+6         50%           0.0   0.142577                 0.566667
+7         75%           0.0   0.149160                 0.733333
+8         max           0.0   0.163478                 1.000000
+2025-09-19 11:16:20,084 - INFO - Extracted discrimination_score_l1: 0.52
+2025-09-19 11:16:20,084 - INFO - Pipeline completed successfully! Score: 0.52
+2025-09-19 11:16:20,084 - INFO - 
+SUCCESS! Extracted score: 0.52
+2025-09-19 11:16:20,084 - INFO - Parameters used (all NON-DEFAULT): {'input_dropout': 0.15, 'loss_fn': 'energy', 'lr_scheduler': 'one_cycle', 'warmup_enabled': True, 'basal_mapping_strategy': 'phase', 'learning_rate': 0.001, 'phase_enabled': True}
+2025-09-19 11:16:20,084 - INFO - Output directory: test_run_20250919_104654
+2025-09-19 11:16:20,084 - INFO - Message: Pipeline completed successfully
+2025-09-19 11:16:20,084 - INFO - Total test time: 1765.42 seconds
+2025-09-19 11:16:20,084 - INFO - 
+NON-DEFAULT SETTINGS USED:
+2025-09-19 11:16:20,084 - INFO -   - input_dropout: 0.15 (enabled, not 0.0)
+2025-09-19 11:16:20,084 - INFO -   - loss_fn: energy (energy, not mse)
+2025-09-19 11:16:20,084 - INFO -   - lr_scheduler: one_cycle (one_cycle, not cosine_annealing)
+2025-09-19 11:16:20,084 - INFO -   - warmup_enabled: True (enabled, not disabled)
+2025-09-19 11:16:20,084 - INFO -   - basal_mapping_strategy: phase (phase, not batch)
+2025-09-19 11:16:20,084 - INFO -   - learning_rate: 0.001 (0.001, not 0.0001)
+2025-09-19 11:16:20,084 - INFO -   - phase_enabled: True (enabled, not disabled)
+2025-09-19 11:16:20,084 - INFO - 
+✅ Test passed! The pipeline works correctly.

@@ -37,16 +37,16 @@ def load_hydra_config(method: str, overrides: list[str] = None) -> DictConfig:
     # Initialize Hydra with the path to your configs directory
     # Adjust the path based on where this file is relative to configs/
     with initialize(version_base=None, config_path="configs"):
-        match method:
-            case "emb":
-                cfg = compose(config_name="state-defaults", overrides=overrides)
-            case "tx":
-                cfg = compose(config_name="config", overrides=overrides)
-            case _:
-                raise ValueError(f"Unknown method: {method}")
+        if method == "emb":
+            cfg = compose(config_name="state-defaults", overrides=overrides)
+        elif method == "tx":
+            cfg = compose(config_name="config", overrides=overrides)
+        else:
+            raise ValueError(f"Unknown method: {method}")
 
     if cfg['name'] == 'debug':
-        cfg['name'] = datetime.now().isoformat()
+        from .utils.naming import generate_run_name
+        cfg['name'] = generate_run_name('debug')
     return cfg
 
 

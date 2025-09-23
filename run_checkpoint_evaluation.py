@@ -46,12 +46,28 @@ def get_checkpoints(checkpoint_dir: str) -> List[Tuple[str, int]]:
 
 
 def select_checkpoints(checkpoints: List[Tuple[str, int]], n_checkpoints: int = 5) -> List[str]:
-    """Select first, last, and evenly spaced checkpoints in between."""
+    """Select checkpoints for evaluation.
+    
+    Args:
+        checkpoints: List of (checkpoint_name, step_number) tuples
+        n_checkpoints: Number of checkpoints to select:
+            - 0: Only the best (last) checkpoint
+            - 1: Only the best (last) checkpoint  
+            - 2+: First, last, and evenly spaced checkpoints in between
+    """
+    if len(checkpoints) == 0:
+        return []
+    
+    if n_checkpoints <= 1:
+        # Only evaluate the best (last) checkpoint
+        return [checkpoints[-1][0]]
+    
     if len(checkpoints) <= n_checkpoints:
+        # If we have fewer checkpoints than requested, return all
         return [cp[0] for cp in checkpoints]
     
-    # Always include first and last
-    selected = [checkpoints[0][0]]  # First
+    # Select first, last, and evenly spaced checkpoints in between
+    selected = [checkpoints[0][0]]  # First checkpoint
     
     if n_checkpoints > 2:
         # Calculate evenly spaced indices for middle checkpoints
@@ -61,7 +77,7 @@ def select_checkpoints(checkpoints: List[Tuple[str, int]], n_checkpoints: int = 
             if idx < len(checkpoints) - 1:  # Don't duplicate last
                 selected.append(checkpoints[idx][0])
     
-    selected.append(checkpoints[-1][0])  # Last
+    selected.append(checkpoints[-1][0])  # Last (best) checkpoint
     return selected
 
 
@@ -104,7 +120,7 @@ def run_evaluation(
         
         # Run preprocessing
         prepro_cmd = [
-            "python", "-m", "state", "tx", "preprocess_infer",
+            "/home/hackerman/anaconda3/envs/atlas/bin/python", "-m", "state", "tx", "preprocess_infer",
             "--adata", adata_path,
             "--output", prepro_path,
             "--control_condition", "non-targeting",
@@ -120,7 +136,7 @@ def run_evaluation(
         output_path = f"/home/hackerman/Github/state/competition/{output_name}.h5ad"
         
         infer_cmd = [
-            "python", "-m", "state", "tx", "infer",
+            "/home/hackerman/anaconda3/envs/atlas/bin/python", "-m", "state", "tx", "infer",
             "--adata", prepro_path,
             "--output", output_path,
             "--model_dir", model_dir,
@@ -138,7 +154,7 @@ def run_evaluation(
         output_path = f"/home/hackerman/Github/state/competition/{output_name}.h5ad"
         
         infer_cmd = [
-            "python", "-m", "state", "tx", "infer",
+            "/home/hackerman/anaconda3/envs/atlas/bin/python", "-m", "state", "tx", "infer",
             "--adata", prepro_path,
             "--output", output_path,
             "--model_dir", model_dir,
@@ -165,7 +181,7 @@ def run_evaluation(
     os.makedirs(output_dir, exist_ok=True)
     
     cell_eval_cmd = [
-        "python", "-m", "cell_eval", "run",
+        "/home/hackerman/anaconda3/envs/atlas/bin/python", "-m", "cell_eval", "run",
         "--profile", "vcc",
         "-ar", adata_path,
         "-ap", output_path,
@@ -186,7 +202,7 @@ def main():
     parser.add_argument("--model_dir", required=True, help="Path to model directory")
     parser.add_argument("--adata", required=True, help="Path to input data file")
     parser.add_argument("--eval_dir", default="./cell_eval_results", help="Base directory for evaluation results")
-    parser.add_argument("--n_checkpoints", type=int, default=5, help="Number of checkpoints to evaluate")
+    parser.add_argument("--n_checkpoints", type=int, default=5, help="Number of checkpoints to evaluate (0 or 1 = best only, 2+ = first, last, and evenly spaced)")
     parser.add_argument("--prepro", action="store_true", default=True, help="Run with preprocessing")
     parser.add_argument("--no_prepro", dest="prepro", action="store_false", help="Run without preprocessing")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")

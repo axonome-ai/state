@@ -73,10 +73,17 @@ def get_loss_fn(loss: Union[str, nn.Module]) -> nn.Module:
     """
     Given a string loss function name, return the corresponding nn.Module class.
 
-    Supported loss functions (add any more here):
-    - MSELoss
-    - L1Loss
-    - SmoothL1Loss
+    Supported loss functions:
+    - mse: Mean Squared Error
+    - l1: L1 Loss
+    - smooth_l1: Smooth L1 Loss
+    - energy: Energy distance (returns None, will be handled by StateTransitionPerturbationModel)
+    - sinkhorn: Sinkhorn loss (returns None, will be handled by StateTransitionPerturbationModel)
+    - cross_entropy: Binary Cross Entropy with Logits
+    - wasserstein: Wasserstein distance (returns None, will be handled by StateTransitionPerturbationModel)
+    - kl_divergence: KL Divergence (returns None, will be handled by StateTransitionPerturbationModel)
+    - mmd: Maximum Mean Discrepancy (returns None, will be handled by StateTransitionPerturbationModel)
+    - tabular: Tabular loss (returns None, will be handled by StateTransitionPerturbationModel)
     """
     if isinstance(loss, nn.Module):
         return loss
@@ -85,7 +92,13 @@ def get_loss_fn(loss: Union[str, nn.Module]) -> nn.Module:
 
     if loss == "mse":
         return nn.MSELoss()
-    # Add more as needed...
+    elif loss == "l1":
+        return nn.L1Loss()
+    elif loss == "smooth_l1":
+        return nn.SmoothL1Loss()
+    elif loss in ["energy", "sinkhorn", "cross_entropy", "wasserstein", "kl_divergence", "mmd", "tabular", "se"]:
+        # These are handled by StateTransitionPerturbationModel, return None
+        return None
     else:
         raise ValueError(f"Unsupported loss function: {loss}")
 

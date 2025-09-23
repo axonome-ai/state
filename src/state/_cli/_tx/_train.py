@@ -260,6 +260,10 @@ def run_tx_train(cfg: DictConfig):
         plugins=plugins,
         callbacks=callbacks,
         gradient_clip_val=cfg["training"]["gradient_clip_val"] if cfg["model"]["name"].lower() != "cpa" else None,
+        enable_progress_bar=True,
+        enable_model_summary=True,
+        # Disable automatic learning rate monitoring to avoid duplicate metrics
+        enable_checkpointing=True,
     )
 
     # If it's SimpleSum, override to do exactly 1 epoch, ignoring `max_steps`.

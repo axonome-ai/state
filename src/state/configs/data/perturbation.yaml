@@ -21,5 +21,6 @@ kwargs:
   store_raw_basal: false
   int_counts: false
   barcode: true
+  phase: false
 output_dir: null
 debug: true

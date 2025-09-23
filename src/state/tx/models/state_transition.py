@@ -7,9 +7,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 from cell_eval import MetricsEvaluator
-
 from geomloss import SamplesLoss
 from typing import Tuple
+
 
 from .base import PerturbationModel
 from ...emb.nn.loss import WassersteinLoss, KLDivergenceLoss, MMDLoss, TabularLoss
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 class CombinedLoss(nn.Module):
     """
     Combined Sinkhorn + Energy loss
+    
     """
     def __init__(self, sinkhorn_weight=0.001, energy_weight=1.0, blur=0.05):
         super().__init__()
@@ -100,6 +101,36 @@ class ConfidenceToken(nn.Module):
 
 
 class StateTransitionPerturbationModel(PerturbationModel):
+    
+    def on_train_batch_end(self, outputs, batch, batch_idx):
+        """Override to prevent automatic logging of trainer/global_step."""
+        # Don't call super() to prevent automatic logging of trainer/global_step
+        # But our direct wandb logging in training_step should still work
+        pass
+    
+    def on_epoch_end(self):
+        """Override to prevent automatic logging of epoch metric."""
+        # Don't call super() to prevent automatic logging of epoch metric
+        pass
+    
+    def _log_to_wandb(self, metrics_dict):
+        """Helper function to log metrics directly to wandb."""
+        if hasattr(self.trainer, 'loggers') and self.trainer.loggers is not None:
+            loggers = list(self.trainer.loggers)
+        elif hasattr(self.trainer, 'logger') and self.trainer.logger is not None:
+            if hasattr(self.trainer.logger, '__iter__') and not isinstance(self.trainer.logger, str):
+                loggers = list(self.trainer.logger)
+            else:
+                loggers = [self.trainer.logger]
+        else:
+            return
+            
+        for logger in loggers:
+            if hasattr(logger, 'experiment') and hasattr(logger.experiment, 'log'):
+                # Add step value for proper time series plotting
+                metrics_with_step = metrics_dict.copy()
+                metrics_with_step["trainer/global_step"] = self.global_step
+                logger.experiment.log(metrics_with_step)
     """
     This model:
       1) Projects basal expression and perturbation encodings into a shared latent space.
@@ -146,6 +177,11 @@ class StateTransitionPerturbationModel(PerturbationModel):
             **kwargs: anything else to pass up to PerturbationModel or not used.
         """
         # Call the parent PerturbationModel constructor
+        # Remove loss and loss_fn from kwargs to avoid duplicate arguments
+        parent_kwargs = kwargs.copy()
+        parent_kwargs.pop("loss", None)
+        parent_kwargs.pop("loss_fn", None)
+        
         super().__init__(
             input_dim=input_dim,
             hidden_dim=hidden_dim,
@@ -154,7 +190,8 @@ class StateTransitionPerturbationModel(PerturbationModel):
             pert_dim=pert_dim,
             batch_dim=batch_dim,
             output_space=output_space,
-            **kwargs,
+            loss_fn=kwargs.get("loss", "energy"),  # Pass loss as loss_fn to parent
+            **parent_kwargs,
         )
 
         # Save or store relevant hyperparams
@@ -194,35 +231,37 @@ class StateTransitionPerturbationModel(PerturbationModel):
             self.lr_policy = create_lr_policy(self.lr_scheduler, **kwargs)
 
         # Build the distributional loss from geomloss
-        blur = kwargs.get("blur", 0.05)
-        loss_name = kwargs.get("loss", "energy")
-        if loss_name == "energy":
-            self.loss_fn = SamplesLoss(loss=self.distributional_loss, blur=blur)
-        elif loss_name == "mse":
-            self.loss_fn = nn.MSELoss()
-        elif loss_name == "se":
-            sinkhorn_weight = kwargs.get("sinkhorn_weight", 0.01)  # 1/100 = 0.01
-            energy_weight = kwargs.get("energy_weight", 1.0)
-            self.loss_fn = CombinedLoss(sinkhorn_weight=sinkhorn_weight, energy_weight=energy_weight, blur=blur)
-        elif loss_name == "sinkhorn":
-            self.loss_fn = SamplesLoss(loss="sinkhorn", blur=blur)
-        elif loss_name == "cross_entropy":
-            self.loss_fn = nn.BCEWithLogitsLoss()
-        elif loss_name == "wasserstein":
-            self.loss_fn = WassersteinLoss()
-        elif loss_name == "kl_divergence":
-            apply_normalization = kwargs.get("apply_normalization", False)
-            self.loss_fn = KLDivergenceLoss(apply_normalization=apply_normalization)
-        elif loss_name == "mmd":
-            kernel = kwargs.get("kernel", "energy")
-            downsample = kwargs.get("num_downsample", 1) if self.training else 1
-            self.loss_fn = MMDLoss(kernel=kernel, downsample=downsample)
-        elif loss_name == "tabular":
-            shared = kwargs.get("shared", 128)  # or get from dataset config
-            downsample = kwargs.get("num_downsample", 1) if self.training else 1
-            self.loss_fn = TabularLoss(shared=shared, downsample=downsample)
-        else:
-            raise ValueError(f"Unknown loss function: {loss_name}")
+        # If parent class returned None for loss_fn, we need to set it up here
+        if self.loss_fn is None:
+            blur = kwargs.get("blur", 0.05)
+            loss_name = kwargs.get("loss", "energy")
+            if loss_name == "energy":
+                self.loss_fn = SamplesLoss(loss=self.distributional_loss, blur=blur)
+            elif loss_name == "mse":
+                self.loss_fn = nn.MSELoss()
+            elif loss_name == "se":
+                sinkhorn_weight = kwargs.get("sinkhorn_weight", 0.01)  # 1/100 = 0.01
+                energy_weight = kwargs.get("energy_weight", 1.0)
+                self.loss_fn = CombinedLoss(sinkhorn_weight=sinkhorn_weight, energy_weight=energy_weight, blur=blur)
+            elif loss_name == "sinkhorn":
+                self.loss_fn = SamplesLoss(loss="sinkhorn", blur=blur)
+            elif loss_name == "cross_entropy":
+                self.loss_fn = nn.BCEWithLogitsLoss()
+            elif loss_name == "wasserstein":
+                self.loss_fn = WassersteinLoss()
+            elif loss_name == "kl_divergence":
+                apply_normalization = kwargs.get("apply_normalization", False)
+                self.loss_fn = KLDivergenceLoss(apply_normalization=apply_normalization)
+            elif loss_name == "mmd":
+                kernel = kwargs.get("kernel", "energy")
+                downsample = kwargs.get("num_downsample", 1) if self.training else 1
+                self.loss_fn = MMDLoss(kernel=kernel, downsample=downsample)
+            elif loss_name == "tabular":
+                shared = kwargs.get("shared", 128)  # or get from dataset config
+                downsample = kwargs.get("num_downsample", 1) if self.training else 1
+                self.loss_fn = TabularLoss(shared=shared, downsample=downsample)
+            else:
+                raise ValueError(f"Unknown loss function: {loss_name}")
 
         self.use_basal_projection = kwargs.get("use_basal_projection", True)
 
@@ -495,6 +534,33 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
     def training_step(self, batch: Dict[str, torch.Tensor], batch_idx: int, padded=True) -> torch.Tensor:
         """Training step logic for both main model and decoder."""
+        
+        # DEBUG: Check if TAZ is present in the batch (should be filtered out)
+        if "pert_name" in batch:
+            pert_names = batch["pert_name"]
+            if isinstance(pert_names, torch.Tensor):
+                pert_names = pert_names.cpu().numpy()
+            elif isinstance(pert_names, list):
+                pert_names = np.array(pert_names)
+            
+            # Check for TAZ in perturbation names (exact match)
+            taz_found = any(pert == "TAZ" for pert in pert_names)
+            if taz_found:
+                raise ValueError(
+                    "🚨 CRITICAL ERROR: TAZ found in training batch! "
+                    "This indicates that perturbation filtering is not working correctly. "
+                    "TAZ should have been filtered out during data loading. "
+                    f"Found perturbations: {pert_names}"
+                )
+        else:
+            import warnings
+            warnings.warn(
+                "⚠️  WARNING: 'pert_name' not found in training batch. "
+                "Cannot verify that TAZ filtering is working correctly. "
+                f"Available batch keys: {list(batch.keys())}",
+                UserWarning
+            )
+        
         # Get model predictions (in latent space)
         confidence_pred = None
         if self.confidence_token is not None:
@@ -512,18 +578,28 @@ class StateTransitionPerturbationModel(PerturbationModel):
             target = target.reshape(1, -1, self.output_dim)
 
         main_loss = self.loss_fn(pred, target).nanmean()
-        self.log("train_loss", main_loss)
         
-        # Log learning rate
+        # Log learning rate and main loss directly to wandb
         current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
-        self.log("train/lr", current_lr, on_step=True, on_epoch=False)
+        self._log_to_wandb({
+            "train/lr": current_lr, 
+            "train_loss": main_loss.item(),
+            "train_loss_step": main_loss.item()
+        })
+        
+        # Also log to PyTorch Lightning for callbacks
+        self.log("train_loss", main_loss, on_step=True, on_epoch=True, prog_bar=True)
 
         # Log individual loss components if using combined loss
         if hasattr(self.loss_fn, 'sinkhorn_loss') and hasattr(self.loss_fn, 'energy_loss'):
             sinkhorn_component = self.loss_fn.sinkhorn_loss(pred, target).nanmean()
             energy_component = self.loss_fn.energy_loss(pred, target).nanmean()
-            self.log("train/sinkhorn_loss", sinkhorn_component)
-            self.log("train/energy_loss", energy_component)
+            
+            # Log directly to wandb
+            self._log_to_wandb({
+                "train/sinkhorn_loss": sinkhorn_component.item(),
+                "train/energy_loss": energy_component.item()
+            })
 
         # Process decoder if available
         decoder_loss = None
@@ -556,7 +632,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 decoder_loss = self.loss_fn(pert_cell_counts_preds, gene_targets).mean()
 
             # Log decoder loss
-            self.log("decoder_loss", decoder_loss)
+            # Log decoder loss directly to wandb
+            self._log_to_wandb({
+                "decoder_loss": decoder_loss.item()
+            })
 
             total_loss = total_loss + self.decoder_loss_weight * decoder_loss
 
@@ -572,8 +651,11 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
             # Compute confidence loss
             confidence_loss = self.confidence_loss_fn(confidence_pred.squeeze(), loss_target.squeeze())
-            self.log("train/confidence_loss", confidence_loss)
-            self.log("train/actual_loss", loss_target.mean())
+            # Log confidence losses directly to wandb
+            self._log_to_wandb({
+                "train/confidence_loss": confidence_loss.item(),
+                "train/actual_loss": loss_target.mean().item()
+            })
 
             # Add to total loss with weighting
             confidence_weight = 0.1  # You can make this configurable
@@ -590,16 +672,39 @@ class StateTransitionPerturbationModel(PerturbationModel):
             l1_loss = torch.abs(delta).mean()
 
             # Log the regularization loss
-            self.log("train/l1_regularization", l1_loss)
+            # Log L1 regularization directly to wandb
+            self._log_to_wandb({
+                "train/l1_regularization": l1_loss.item()
+            })
 
             # Add regularization to total loss
             total_loss = total_loss + self.regularization * l1_loss
 
-        self.log("post_reg_train_loss", total_loss)
+        # Log post regularization loss directly to wandb
+        self._log_to_wandb({
+            "post_reg_train_loss": total_loss.item()
+        })
         return total_loss
 
     def validation_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> None:
         """Validation step logic."""
+        
+        # Check for TAZ in perturbation names
+        if "pert_name" in batch:
+            pert_names = batch["pert_name"]
+            if isinstance(pert_names, torch.Tensor):
+                pert_names = pert_names.cpu().numpy()
+            elif isinstance(pert_names, list):
+                pert_names = np.array(pert_names)
+            
+            if "TAZ" in pert_names:
+                raise ValueError(
+                    "🚨 CRITICAL ERROR: TAZ found in validation batch! "
+                    "This indicates that perturbation filtering is not working correctly. "
+                    "TAZ should have been filtered out during data loading. "
+                    f"Found perturbations: {pert_names}"
+                )
+        
         if self.confidence_token is None:
             pred, confidence_pred = self.forward(batch), None
         else:
@@ -610,14 +715,23 @@ class StateTransitionPerturbationModel(PerturbationModel):
         target = target.reshape(-1, self.cell_sentence_len, self.output_dim)
 
         loss = self.loss_fn(pred, target).mean()
-        self.log("val_loss", loss)
+        # Log validation loss directly to wandb
+        self._log_to_wandb({
+            "val_loss": loss.item()
+        })
+        
+        # Also log to PyTorch Lightning for callbacks
+        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
 
         # Log individual loss components if using combined loss
         if hasattr(self.loss_fn, 'sinkhorn_loss') and hasattr(self.loss_fn, 'energy_loss'):
             sinkhorn_component = self.loss_fn.sinkhorn_loss(pred, target).mean()
             energy_component = self.loss_fn.energy_loss(pred, target).mean()
-            self.log("val/sinkhorn_loss", sinkhorn_component)
-            self.log("val/energy_loss", energy_component)
+            # Log validation loss components directly to wandb
+            self._log_to_wandb({
+                "val/sinkhorn_loss": sinkhorn_component.item(),
+                "val/energy_loss": energy_component.item()
+            })
 
         pert_cell_counts_preds = None
         gene_targets = None
@@ -641,7 +755,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 decoder_loss = self.loss_fn(pert_cell_counts_preds, gene_targets).mean()
 
             # Log the validation metric
-            self.log("val/decoder_loss", decoder_loss)
+            # Log validation decoder loss directly to wandb
+            self._log_to_wandb({
+                "val/decoder_loss": decoder_loss.item()
+            })
             loss = loss + self.decoder_loss_weight * decoder_loss
 
         if confidence_pred is not None:
@@ -656,8 +773,11 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
             # Compute confidence loss
             confidence_loss = self.confidence_loss_fn(confidence_pred.squeeze(), loss_target.squeeze())
-            self.log("val/confidence_loss", confidence_loss)
-            self.log("val/actual_loss", loss_target.mean())
+            # Log validation confidence losses directly to wandb
+            self._log_to_wandb({
+                "val/confidence_loss": confidence_loss.item(),
+                "val/actual_loss": loss_target.mean().item()
+            })
 
 
         # TODO: gene target should be recorded and used for metrics
@@ -666,6 +786,22 @@ class StateTransitionPerturbationModel(PerturbationModel):
         return {"loss": loss, "predictions": pred}
 
     def test_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> None:
+        # Check for TAZ in perturbation names
+        if "pert_name" in batch:
+            pert_names = batch["pert_name"]
+            if isinstance(pert_names, torch.Tensor):
+                pert_names = pert_names.cpu().numpy()
+            elif isinstance(pert_names, list):
+                pert_names = np.array(pert_names)
+            
+            if "TAZ" in pert_names:
+                raise ValueError(
+                    "🚨 CRITICAL ERROR: TAZ found in test batch! "
+                    "This indicates that perturbation filtering is not working correctly. "
+                    "TAZ should have been filtered out during data loading. "
+                    f"Found perturbations: {pert_names}"
+                )
+        
         if self.confidence_token is None:
             pred, confidence_pred = self.forward(batch, padded=False), None
         else:
@@ -675,7 +811,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
         pred = pred.reshape(1, -1, self.output_dim)
         target = target.reshape(1, -1, self.output_dim)
         loss = self.loss_fn(pred, target).mean()
-        self.log("test_loss", loss)
+        # Log test loss directly to wandb
+        self._log_to_wandb({
+            "test_loss": loss.item()
+        })
 
         if confidence_pred is not None:
             # Detach main loss to prevent gradients flowing through it
@@ -689,7 +828,10 @@ class StateTransitionPerturbationModel(PerturbationModel):
 
             # Compute confidence loss
             confidence_loss = self.confidence_loss_fn(confidence_pred.squeeze(), loss_target.squeeze())
-            self.log("test/confidence_loss", confidence_loss)
+            # Log test confidence loss directly to wandb
+            self._log_to_wandb({
+                "test/confidence_loss": confidence_loss.item()
+            })
         self._cache_batch_for_metrics(batch, pred, target)
 
     def predict_step(self, batch, batch_idx, padded=True, **kwargs):
@@ -784,7 +926,7 @@ class StateTransitionPerturbationModel(PerturbationModel):
         freq = cfg["val_freq"]
 
         # ── adding other metrics ─────────────────────────────
-        self.log("lr", self.lr, sync_dist=True)
+        # Removed duplicate lr logging - already logged in training_step
 
         # ── check perturbation metric ─────────────────────────────
         run_pert = False
@@ -869,16 +1011,20 @@ class StateTransitionPerturbationModel(PerturbationModel):
             if not self._compute_de:
                 skip_metrics.append("overlap_at_N")
 
+            # Use a unique temporary directory for validation to avoid conflicts
+            import tempfile
+            import os
+            temp_dir = tempfile.mkdtemp(prefix="cell_eval_validation_")
+            
             evaluator = MetricsEvaluator(
                 adata_pred=ad_pred,
                 adata_real=ad_real,
                 control_pert=cfg["validation"]["perturbation"]["ctrl_label"],
                 pert_col=cfg["validation"]["perturbation"]["pert_col"],
-                outdir='/tmp/random_dir/',
+                outdir=temp_dir,
                 batch_size=2**12,  # found to be the fastest
 
             )
-            evaluator.outdir = None
 
             metrics_config = None
             if not using_counts:
@@ -897,28 +1043,48 @@ class StateTransitionPerturbationModel(PerturbationModel):
                 write_csv=False,
                 metric_configs=metrics_config
             )
+            
+            # Clean up temporary directory
+            try:
+                import shutil
+                shutil.rmtree(temp_dir)
+            except Exception as e:
+                # Log warning but don't fail validation
+                print(f"Warning: Could not clean up temp directory {temp_dir}: {e}")
 
             # ------------------------------------------------------------------
             # Log metrics
             # ------------------------------------------------------------------
             mae_pred = agg_result.filter(pl.col("statistic") == "mean").select("mae").item()
-            self.log("validation/mae", mae_pred, sync_dist=True)
+            # Log validation MAE directly to wandb
+            self._log_to_wandb({
+                "validation/mae": mae_pred
+            })
 
             pds_pred = -1
             if self._compute_perturb:
                 pds_pred = agg_result.filter(pl.col("statistic") == "mean").select("discrimination_score_l1").item()
-                self.log("validation/perturbation_rank", pds_pred, sync_dist=True)
+                # Log validation perturbation rank directly to wandb
+                self._log_to_wandb({
+                    "validation/perturbation_rank": pds_pred
+                })
                 self._last_val_perturbation_check = self.global_step
 
             des_pred = -1
             if self._compute_de:
                 des_pred = agg_result.filter(pl.col("statistic") == "mean").select("overlap_at_N").item()
-                self.log("validation/overlap_at_N", des_pred, sync_dist=True)
+                # Log validation overlap at N directly to wandb
+                self._log_to_wandb({
+                    "validation/overlap_at_N": des_pred
+                })
                 self._last_val_de_check = self.global_step
 
             if self._compute_perturb and self._compute_de:
                 score = calculate_overall_score(des_pred, pds_pred, mae_pred)
-                self.log("validation/overall_score", score, sync_dist=True)
+                # Log validation overall score directly to wandb
+                self._log_to_wandb({
+                    "validation/overall_score": score
+                })
 
             self.trainer.strategy.barrier()
 

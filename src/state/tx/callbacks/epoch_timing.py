@@ -49,8 +49,10 @@ class EpochTimingCallback(Callback):
         self.epoch_durations.append(epoch_duration)
         self.cumulative_time += epoch_duration
 
-        # Log epoch duration in minutes
-        pl_module.log("timing/epoch_duration_minutes", epoch_duration / 60.0, on_epoch=True)
+        # Log epoch duration in minutes directly to wandb
+        pl_module._log_to_wandb({
+            "timing/epoch_duration_minutes": epoch_duration / 60.0
+        })
 
     def on_train_end(self, trainer, pl_module):
         """Training ended - no additional logging needed."""

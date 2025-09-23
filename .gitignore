@@ -24,3 +24,5 @@ exploration/
 
 cell_eval_results_bash/
 cell_eval_results_filt/
+
+bo_runs/

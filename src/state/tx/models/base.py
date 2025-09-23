@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Union, Any
 
+import numpy as np
 import torch
 import torch.nn as nn
 from lightning.pytorch import LightningModule
@@ -265,6 +266,35 @@ class PerturbationModel(ABC, LightningModule):
 
     def training_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> torch.Tensor:
         """Training step logic for both main model and decoder."""
+        
+        print(f"DEBUG: PerturbationModel.training_step called with batch_idx={batch_idx}")
+        
+        # DEBUG: Check if TAZ is present in the batch (should be filtered out)
+        if "pert_name" in batch:
+            pert_names = batch["pert_name"]
+            if isinstance(pert_names, torch.Tensor):
+                pert_names = pert_names.cpu().numpy()
+            elif isinstance(pert_names, list):
+                import numpy as np
+                pert_names = np.array(pert_names)
+            
+            # Check for TAZ in perturbation names
+            if "TAZ" in pert_names:
+                raise ValueError(
+                    "🚨 CRITICAL ERROR: TAZ found in training batch! "
+                    "This indicates that perturbation filtering is not working correctly. "
+                    "TAZ should have been filtered out during data loading. "
+                    f"Found perturbations: {pert_names}"
+                )
+        else:
+            import warnings
+            warnings.warn(
+                "⚠️  WARNING: 'pert_name' not found in training batch. "
+                "Cannot verify that TAZ filtering is working correctly. "
+                f"Available batch keys: {list(batch.keys())}",
+                UserWarning
+            )
+        
         # Get model predictions (in latent space)
         pred = self(batch)
 

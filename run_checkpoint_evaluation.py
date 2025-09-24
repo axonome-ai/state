@@ -103,7 +103,7 @@ def run_evaluation(
     eval_dir: str,
     prepro: bool = True,
     seed: int = 42,
-    ctrl_pert_option: str = "replace",
+    ctrl_pert_option: str = None,
     force: bool = False
 ) -> str:
     """Run evaluation for a single checkpoint."""
@@ -206,7 +206,7 @@ def main():
     parser.add_argument("--prepro", action="store_true", default=True, help="Run with preprocessing")
     parser.add_argument("--no_prepro", dest="prepro", action="store_false", help="Run without preprocessing")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
-    parser.add_argument("--ctrl_pert_option", choices=["replace", None], default="replace", help="Control perturbation option")
+    parser.add_argument("--ctrl_pert_option", choices=["replace", None], default=None, help="Control perturbation option")
     parser.add_argument("--force", action="store_true", help="Force re-run even if results already exist")
     
     args = parser.parse_args()

@@ -271,8 +271,7 @@ class TrainingRunner:
             "--adata", eval_data_path,
             "--eval_dir", eval_output_dir,  # Specify where to save results
             "--n_checkpoints", "1",  # Only evaluate the best checkpoint
-            "--seed", "42",
-            "--ctrl_pert_option", "replace"
+            "--seed", "42"
         ]
         
         # Add preprocessing flag

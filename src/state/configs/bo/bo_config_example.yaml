@@ -77,5 +77,4 @@ evaluation:
   n_checkpoints: 0
   prepro: true
   seed: 42
-  ctrl_pert_option: "replace"
 

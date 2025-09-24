@@ -39,7 +39,7 @@ search_space:
     description: "Whether to enable phase functionality"
   
   regularization:
-    options: [0.0, 0.001, 0.01, 0.1, 1.0, 10.0]
+    options: [0.0, 0.001, 0.01, 0.1, 0.5, 1.0]
     description: "L1 regularization strength for perturbation predictions (0 = disabled)"
 
 # Target metric
@@ -77,4 +77,3 @@ evaluation:
   n_checkpoints: 0
   prepro: true
   seed: 42
-  ctrl_pert_option: "replace"

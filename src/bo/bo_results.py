@@ -202,7 +202,8 @@ def get_bo_results(config_name: str = "bo_config_example"):
                     'warmup_enabled': 'warmup',
                     'basal_mapping_strategy': 'data.kwargs.basal_mapping_strategy',
                     'learning_rate': 'lr',
-                    'phase_enabled': 'data.kwargs.phase'
+                    'phase_enabled': 'data.kwargs.phase',
+                    'regularization': 'model.kwargs.regularization'
                 }
                 
                 for param in tunable_params:

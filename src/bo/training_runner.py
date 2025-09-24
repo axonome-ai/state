@@ -165,7 +165,8 @@ class TrainingRunner:
             f"model.kwargs.input_dropout={params['input_dropout']}",  # Set input dropout in model
             f"data.kwargs.basal_mapping_strategy={params['basal_mapping_strategy']}",  # Add basal mapping strategy
             f"data.kwargs.phase={str(params['phase_enabled']).lower()}",  # Add phase enabled parameter to data
-            f"model.kwargs.phase={str(params['phase_enabled']).lower()}"  # Set phase enabled parameter in model
+            f"model.kwargs.phase={str(params['phase_enabled']).lower()}",  # Set phase enabled parameter in model
+            f"model.kwargs.regularization={params['regularization']}"  # Add regularization parameter
         ]
         
         return cmd

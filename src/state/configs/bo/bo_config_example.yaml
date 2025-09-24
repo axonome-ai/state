@@ -27,8 +27,8 @@ search_space:
     description: "Whether to enable warmup"
   
   basal_mapping_strategy:
-    options: ["batch", "random", "phase"]
-    description: "Strategy for mapping basal cells to perturbed cells"
+    options: ["random"]
+    description: "Strategy for mapping basal cells to perturbed cells (random=random sampling)"
   
   learning_rate:
     options: [0.0001, 0.001, 0.01]
@@ -37,6 +37,10 @@ search_space:
   phase_enabled:
     options: [true, false]
     description: "Whether to enable phase functionality"
+  
+  regularization:
+    options: [0.0, 0.001, 0.01, 0.1, 1.0, 10.0]
+    description: "L1 regularization strength for perturbation predictions (0 = disabled)"
 
 # Target metric
 target_metric: "discrimination_score_l1"

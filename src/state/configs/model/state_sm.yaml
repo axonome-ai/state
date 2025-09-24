@@ -27,6 +27,7 @@ kwargs:
   transformer_backbone_key: llama
   phase: false
   input_dropout: 0.0
+  regularization: 0
   lr_policy_config:
     name: cosine_annealing
     max_lr: 1e-4

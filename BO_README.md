@@ -28,11 +28,15 @@ This README provides instructions for setting up and running Bayesian Optimizati
    - Extract it to any location on your system
    - Note the path to the extracted dataset directory
 
-2. **Update the dataset path in the config:**
+2. **Update the dataset paths in the config:**
    - Open `src/state/configs/bo/bo_config_example.yaml`
-   - Update the `dataset_dir_path` to point to your extracted dataset location:
+   - Update the following paths to point to your extracted dataset location:
      ```yaml
      dataset_dir_path: "/path/to/your/extracted/dataset"
+     # ... other paths ...
+     training_params:
+       data:
+         perturbation_features_file: "/path/to/your/extracted/dataset/ESM2_pert_features.pt"
      ```
 
 ## Running Bayesian Optimization

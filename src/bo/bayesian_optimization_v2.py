@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Enhanced Bayesian Optimization setup with config-based run management and continuation.
 
@@ -10,7 +11,6 @@ This script provides:
 """
 
 import os
-import subprocess
 import tempfile
 import yaml
 import pandas as pd
@@ -27,20 +27,11 @@ from .bo_config_manager import BOConfigManager
 # Set up logging
 logger = logging.getLogger(__name__)
 
-try:
-    from skopt import gp_minimize
-    from skopt.space import Real, Categorical, Integer
-    from skopt.utils import use_named_args
-    from skopt.acquisition import gaussian_ei
-    from skopt import Optimizer
-except ImportError:
-    print("Installing scikit-optimize...")
-    subprocess.run(["pip", "install", "scikit-optimize"], check=True)
-    from skopt import gp_minimize
-    from skopt.space import Real, Categorical, Integer
-    from skopt.utils import use_named_args
-    from skopt.acquisition import gaussian_ei
-    from skopt import Optimizer
+from skopt import gp_minimize
+from skopt.space import Real, Categorical, Integer
+from skopt.utils import use_named_args
+from skopt.acquisition import gaussian_ei
+from skopt import Optimizer
 
 
 class BayesianOptimizerV2:

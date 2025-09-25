@@ -12,7 +12,6 @@ Target metric: discrimination_score_l1 (perturbation_rank) from agg_results.csv
 """
 
 import os
-import subprocess
 import tempfile
 import yaml
 import pandas as pd
@@ -35,20 +34,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-try:
-    from skopt import gp_minimize
-    from skopt.space import Real, Categorical, Integer
-    from skopt.utils import use_named_args
-    from skopt.acquisition import gaussian_ei
-    from skopt import Optimizer
-except ImportError:
-    print("Installing scikit-optimize...")
-    subprocess.run(["pip", "install", "scikit-optimize"], check=True)
-    from skopt import gp_minimize
-    from skopt.space import Real, Categorical, Integer
-    from skopt.utils import use_named_args
-    from skopt.acquisition import gaussian_ei
-    from skopt import Optimizer
+from skopt import gp_minimize
+from skopt.space import Real, Categorical, Integer
+from skopt.utils import use_named_args
+from skopt.acquisition import gaussian_ei
+from skopt import Optimizer
 
 
 class BayesianOptimizer:

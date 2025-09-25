@@ -163,7 +163,14 @@ class BayesianOptimizerV2:
         config = yaml.safe_load(content)
         
         # Handle dataset_dir_path substitution recursively
-        dataset_dir_path = config.get('dataset_dir_path', '/home/hackerman/Github/state/competition_support_set')
+        dataset_dir_path = config.get('dataset_dir_path')
+        if not dataset_dir_path:
+            current_value = config.get('dataset_dir_path', 'None')
+            raise ValueError(f"Required config key 'dataset_dir_path' is missing (current value: {current_value}).")
+        
+        # Check if the dataset directory actually exists
+        if not os.path.exists(dataset_dir_path):
+            raise FileNotFoundError(f"Dataset directory not found: {dataset_dir_path}")
         
         def substitute_dataset_path(obj):
             if isinstance(obj, str):
@@ -251,7 +258,10 @@ class BayesianOptimizerV2:
     
     def _create_search_space(self):
         """Create search space from config."""
-        search_space = self.config.get('search_space', {})
+        search_space = self.config.get('search_space')
+        if not search_space:
+            current_value = self.config.get('search_space', 'None')
+            raise ValueError(f"Required config key 'search_space' is missing (current value: {current_value}).")
         
         space = []
         for param_name, param_config in search_space.items():

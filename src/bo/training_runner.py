@@ -5,6 +5,7 @@ This module provides shared functionality for running training and evaluation.
 """
 
 import os
+import sys
 import subprocess
 import tempfile
 import pandas as pd
@@ -78,7 +79,7 @@ class TrainingRunner:
         
         # Run preprocessing command
         cmd = [
-            "/home/hackerman/anaconda3/envs/atlas/bin/python", "-m", "state", "tx", "preprocess_infer",
+            sys.executable, "-m", "state", "tx", "preprocess_infer",
             "--adata", self.holdout_data_path,
             "--output", str(preprocessed_path),
             "--control_condition", "non-targeting",
@@ -134,7 +135,7 @@ class TrainingRunner:
             logger.info(f"🔧 Using {effective_num_workers} worker(s) instead of {self.num_workers} due to basal_mapping_strategy='batch'")
         
         cmd = [
-            "/home/hackerman/anaconda3/envs/atlas/bin/python", "-m", "state", "tx", "train",
+            sys.executable, "-m", "state", "tx", "train",
             f"data.kwargs.toml_config_path={self.base_config_path}",
             f"data.kwargs.num_workers={effective_num_workers}",
             "data.kwargs.batch_col=batch_var",
@@ -266,7 +267,7 @@ class TrainingRunner:
             logger.info(f"Using base config data: {eval_data_path}")
         
         eval_cmd = [
-            "/home/hackerman/anaconda3/envs/atlas/bin/python", "run_checkpoint_evaluation.py",
+            sys.executable, "run_checkpoint_evaluation.py",
             "--model_dir", str(actual_model_dir),
             "--adata", eval_data_path,
             "--eval_dir", eval_output_dir,  # Specify where to save results
